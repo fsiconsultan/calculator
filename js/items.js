@@ -2,16 +2,16 @@
    FSI CONSULTANT - PLTS CALCULATOR
    File: js/items.js
 
-   FUNGSI:
+   Fungsi:
    1. Add Item
    2. Remove Item
-   3. Edit Item Name
+   3. Edit nama item
    4. Edit Qty
    5. Edit Harga / Item
-   6. Hitung Total otomatis
-   7. Update nomor item
-   8. Global items state
-   9. Event fsi:items-changed
+   6. Format angka otomatis dengan titik ribuan
+   7. Hitung Total Harga
+   8. Load Default Items
+   9. Sinkronisasi ke Costs
    ============================================================ */
 
 (function () {
@@ -21,18 +21,18 @@
     console.log("FSI Items: module mulai loading...");
 
 
-    /* ========================================================
-       1. ITEM STATE
-       ======================================================== */
+    /* ============================================================
+       1. STATE
+       ============================================================ */
 
-    window.FSI_ITEMS = Array.isArray(window.FSI_ITEMS)
-        ? window.FSI_ITEMS
-        : [];
+    if (!Array.isArray(window.FSI_ITEMS)) {
+        window.FSI_ITEMS = [];
+    }
 
 
-    /* ========================================================
+    /* ============================================================
        2. UTILITY
-       ======================================================== */
+       ============================================================ */
 
     function generateItemId() {
 
@@ -48,9 +48,54 @@
     }
 
 
+    /* ------------------------------------------------------------
+       Parse number
+    ------------------------------------------------------------ */
+
     function parseItemNumber(value) {
 
-        const number = Number(value);
+        if (typeof value === "number") {
+
+            return Number.isFinite(value)
+                ? value
+                : 0;
+
+        }
+
+
+        let text =
+            String(value ?? "")
+                .trim();
+
+
+        if (!text) {
+            return 0;
+        }
+
+
+        /*
+         * Hapus titik ribuan.
+         *
+         * Contoh:
+         * 2.700.000 -> 2700000
+         */
+
+        text =
+            text.replace(/\./g, "");
+
+
+        /*
+         * Hapus karakter selain
+         * angka dan minus.
+         */
+
+        text =
+            text.replace(/[^\d-]/g, "");
+
+
+        const number =
+            Number(text);
+
 
         return Number.isFinite(number)
             ? number
@@ -59,7 +104,40 @@
     }
 
 
+    /* ------------------------------------------------------------
+       Format number
+    ------------------------------------------------------------ */
+
+    function formatItemNumber(value) {
+
+        const number =
+            Math.max(
+                0,
+                Math.round(
+                    parseItemNumber(value)
+                )
+            );
+
+
+        return new Intl.NumberFormat(
+            "id-ID",
+            {
+                maximumFractionDigits: 0
+            }
+        ).format(number);
+
+    }
+
+
+    /* ------------------------------------------------------------
+       Currency
+    ------------------------------------------------------------ */
+
     function formatItemCurrency(value) {
+
+        const number =
+            parseItemNumber(value);
+
 
         return new Intl.NumberFormat(
             "id-ID",
@@ -69,22 +147,32 @@
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
             }
-        ).format(Number(value) || 0);
+        ).format(number);
 
     }
 
 
-    /* ========================================================
+    /* ------------------------------------------------------------
+       Escape HTML
+    ------------------------------------------------------------ */
+
+    function escapeItemHtml(value) {
+
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* ============================================================
        3. CREATE ITEM
-       ======================================================== */
+       ============================================================ */
 
     function createItem(data = {}) {
-
-        const qtyValue =
-            parseItemNumber(data.qty);
-
-        const priceValue =
-            parseItemNumber(data.price);
 
         const item = {
 
@@ -93,20 +181,19 @@
                 generateItemId(),
 
             name:
-                data.name !== undefined
-                    ? String(data.name)
-                    : "",
+                data.name ||
+                "",
 
             qty:
                 Math.max(
-                    1,
-                    qtyValue || 1
+                    0,
+                    parseItemNumber(data.qty) || 1
                 ),
 
             price:
                 Math.max(
                     0,
-                    priceValue
+                    parseItemNumber(data.price)
                 ),
 
             total: 0
@@ -124,13 +211,13 @@
     }
 
 
-    /* ========================================================
+    /* ============================================================
        4. ADD ITEM
-       ======================================================== */
+       ============================================================ */
 
     function addItem(
         data = {},
-        shouldRender = true
+        render = true
     ) {
 
         const item =
@@ -140,13 +227,7 @@
         window.FSI_ITEMS.push(item);
 
 
-        console.log(
-            "FSI Items: item ditambahkan",
-            item
-        );
-
-
-        if (shouldRender) {
+        if (render) {
 
             renderItems();
 
@@ -158,19 +239,16 @@
     }
 
 
-    /* ========================================================
+    /* ============================================================
        5. REMOVE ITEM
-       ======================================================== */
+       ============================================================ */
 
     function removeItem(itemId) {
 
         window.FSI_ITEMS =
             window.FSI_ITEMS.filter(
-                function (item) {
-
-                    return item.id !== itemId;
-
-                }
+                item =>
+                    item.id !== itemId
             );
 
 
@@ -179,9 +257,9 @@
     }
 
 
-    /* ========================================================
+    /* ============================================================
        6. UPDATE ITEM
-       ======================================================== */
+       ============================================================ */
 
     function updateItem(
         itemId,
@@ -191,99 +269,70 @@
 
         const item =
             window.FSI_ITEMS.find(
-                function (currentItem) {
-
-                    return currentItem.id === itemId;
-
-                }
+                current =>
+                    current.id === itemId
             );
 
 
         if (!item) {
-
-            console.warn(
-                "FSI Items: item tidak ditemukan:",
-                itemId
-            );
 
             return;
 
         }
 
 
-        /* NAME */
-
         if (field === "name") {
 
             item.name =
-                String(value);
+                String(value ?? "");
 
         }
 
 
-        /* QTY */
-
         else if (field === "qty") {
-
-            const qty =
-                parseItemNumber(value);
 
             item.qty =
                 Math.max(
-                    1,
-                    qty || 1
+                    0,
+                    parseItemNumber(value)
                 );
 
         }
 
 
-        /* PRICE */
-
         else if (field === "price") {
-
-            const price =
-                parseItemNumber(value);
 
             item.price =
                 Math.max(
                     0,
-                    price
+                    parseItemNumber(value)
                 );
 
         }
 
-
-        /* TOTAL */
 
         item.total =
             item.qty *
             item.price;
 
 
-        /*
-         * Hanya update angka total.
-         * Jangan render ulang seluruh row karena
-         * cursor input bisa hilang.
-         */
-
         updateItemRow(item);
 
-        updateItemsTotalDisplay();
 
         triggerItemsChange();
 
     }
 
 
-    /* ========================================================
+    /* ============================================================
        7. UPDATE SINGLE ROW
-       ======================================================== */
+       ============================================================ */
 
     function updateItemRow(item) {
 
         const rows =
             document.querySelectorAll(
-                "#itemsTableBody tr[data-item-id]"
+                "[data-item-id]"
             );
 
 
@@ -291,7 +340,7 @@
 
 
         rows.forEach(
-            function (currentRow) {
+            currentRow => {
 
                 if (
                     currentRow.getAttribute(
@@ -332,53 +381,9 @@
     }
 
 
-    /* ========================================================
-       8. UPDATE TOTAL DISPLAY
-       ======================================================== */
-
-    function updateItemsTotalDisplay() {
-
-        const total =
-            getTotalItems();
-
-
-        const totalElement =
-            document.getElementById(
-                "totalItems"
-            );
-
-
-        if (totalElement) {
-
-            totalElement.textContent =
-                formatItemCurrency(
-                    total
-                );
-
-        }
-
-
-        const summaryElement =
-            document.getElementById(
-                "summaryTotalItems"
-            );
-
-
-        if (summaryElement) {
-
-            summaryElement.textContent =
-                formatItemCurrency(
-                    total
-                );
-
-        }
-
-    }
-
-
-    /* ========================================================
-       9. RENDER ITEMS
-       ======================================================== */
+    /* ============================================================
+       8. RENDER ITEMS
+       ============================================================ */
 
     function renderItems() {
 
@@ -390,10 +395,6 @@
 
         if (!tbody) {
 
-            console.warn(
-                "FSI Items: #itemsTableBody tidak ditemukan."
-            );
-
             return;
 
         }
@@ -402,7 +403,9 @@
         tbody.innerHTML = "";
 
 
-        /* EMPTY */
+        /*
+         * Empty state
+         */
 
         if (
             window.FSI_ITEMS.length === 0
@@ -418,22 +421,12 @@
                 "empty-table-row";
 
 
-            const emptyCell =
-                document.createElement(
-                    "td"
-                );
-
-
-            emptyCell.colSpan = 6;
-
-
-            emptyCell.textContent =
-                'Belum ada item. Klik "Add Item" untuk menambahkan.';
-
-
-            emptyRow.appendChild(
-                emptyCell
-            );
+            emptyRow.innerHTML = `
+                <td colspan="6">
+                    Belum ada item.
+                    Klik "Add Item" untuk menambahkan.
+                </td>
+            `;
 
 
             tbody.appendChild(
@@ -441,26 +434,24 @@
             );
 
 
-            updateItemsTotalDisplay();
+            refreshItemIcons();
 
             triggerItemsChange();
-
-            refreshItemIcons();
 
             return;
 
         }
 
 
-        /* ITEMS */
+        /*
+         * Render rows
+         */
 
         window.FSI_ITEMS.forEach(
-            function (item, index) {
-
-                item.total =
-                    item.qty *
-                    item.price;
-
+            (
+                item,
+                index
+            ) => {
 
                 const row =
                     createItemRow(
@@ -477,18 +468,17 @@
         );
 
 
-        updateItemsTotalDisplay();
-
         refreshItemIcons();
+
 
         triggerItemsChange();
 
     }
 
 
-    /* ========================================================
-       10. CREATE ITEM ROW
-       ======================================================== */
+    /* ============================================================
+       9. CREATE ITEM ROW
+       ============================================================ */
 
     function createItemRow(
         item,
@@ -507,274 +497,94 @@
         );
 
 
-        /* ====================================================
-           NUMBER
-           ==================================================== */
+        row.innerHTML = `
 
-        const numberCell =
-            document.createElement(
-                "td"
-            );
+            <!-- NUMBER -->
+            <td class="col-no">
 
-        numberCell.className =
-            "col-no";
+                <span class="item-number">
+                    ${index + 1}
+                </span>
 
+            </td>
 
-        const numberSpan =
-            document.createElement(
-                "span"
-            );
 
-        numberSpan.className =
-            "item-number";
+            <!-- ITEM NAME -->
+            <td>
 
+                <input
+                    type="text"
+                    class="item-name"
+                    value="${escapeItemHtml(item.name)}"
+                    placeholder="Nama item"
+                    data-field="name"
+                    autocomplete="off"
+                >
 
-        numberSpan.textContent =
-            index + 1;
+            </td>
 
 
-        numberCell.appendChild(
-            numberSpan
-        );
+            <!-- QTY -->
+            <td class="col-qty">
 
+                <input
+                    type="number"
+                    class="item-qty"
+                    value="${item.qty}"
+                    min="0"
+                    step="1"
+                    data-field="qty"
+                >
 
-        /* ====================================================
-           NAME
-           ==================================================== */
+            </td>
 
-        const nameCell =
-            document.createElement(
-                "td"
-            );
 
-        nameCell.className =
-            "col-name";
+            <!-- PRICE -->
+            <td class="col-price">
 
+                <input
+                    type="text"
+                    inputmode="numeric"
+                    class="item-price"
+                    value="${formatItemNumber(item.price)}"
+                    placeholder="0"
+                    data-field="price"
+                    autocomplete="off"
+                >
 
-        const nameInput =
-            document.createElement(
-                "input"
-            );
+            </td>
 
-        nameInput.type = "text";
 
-        nameInput.className =
-            "item-name";
+            <!-- TOTAL -->
+            <td class="col-total item-total">
 
-        nameInput.value =
-            item.name;
+                ${formatItemCurrency(item.total)}
 
-        nameInput.placeholder =
-            "Nama item";
+            </td>
 
-        nameInput.autocomplete =
-            "off";
 
+            <!-- ACTION -->
+            <td class="col-action">
 
-        nameCell.appendChild(
-            nameInput
-        );
+                <button
+                    type="button"
+                    class="delete-row-btn"
+                    title="Delete Item"
+                    data-action="delete"
+                >
 
+                    <i data-lucide="trash-2"></i>
 
-        /* ====================================================
-           QTY
-           ==================================================== */
+                </button>
 
-        const qtyCell =
-            document.createElement(
-                "td"
-            );
+            </td>
 
-        qtyCell.className =
-            "col-qty";
+        `;
 
-
-        const qtyInput =
-            document.createElement(
-                "input"
-            );
-
-        qtyInput.type = "number";
-
-        qtyInput.className =
-            "item-qty";
-
-        qtyInput.value =
-            item.qty;
-
-        qtyInput.min = "1";
-
-        qtyInput.step = "1";
-
-
-        qtyCell.appendChild(
-            qtyInput
-        );
-
-
-        /* ====================================================
-           PRICE
-           ==================================================== */
-
-        const priceCell =
-            document.createElement(
-                "td"
-            );
-
-        priceCell.className =
-            "col-price";
-
-
-        const priceInput =
-            document.createElement(
-                "input"
-            );
-
-        priceInput.type = "number";
-
-        priceInput.className =
-            "item-price";
-
-        priceInput.value =
-            item.price;
-
-        priceInput.min = "0";
-
-        priceInput.step = "1000";
-
-
-        priceCell.appendChild(
-            priceInput
-        );
-
-
-        /* ====================================================
-           TOTAL
-           ==================================================== */
-
-        const totalCell =
-            document.createElement(
-                "td"
-            );
-
-        totalCell.className =
-            "col-total";
-
-
-        const totalSpan =
-            document.createElement(
-                "span"
-            );
-
-        totalSpan.className =
-            "item-total";
-
-
-        totalSpan.textContent =
-            formatItemCurrency(
-                item.total
-            );
-
-
-        totalCell.appendChild(
-            totalSpan
-        );
-
-
-        /* ====================================================
-           DELETE
-           ==================================================== */
-
-        const actionCell =
-            document.createElement(
-                "td"
-            );
-
-        actionCell.className =
-            "col-action";
-
-
-        const deleteButton =
-            document.createElement(
-                "button"
-            );
-
-        deleteButton.type =
-            "button";
-
-        deleteButton.className =
-            "delete-row-btn";
-
-        deleteButton.title =
-            "Hapus Item";
-
-        deleteButton.setAttribute(
-            "aria-label",
-            "Hapus Item"
-        );
-
-
-        const icon =
-            document.createElement(
-                "i"
-            );
-
-        icon.setAttribute(
-            "data-lucide",
-            "trash-2"
-        );
-
-
-        deleteButton.appendChild(
-            icon
-        );
-
-
-        actionCell.appendChild(
-            deleteButton
-        );
-
-
-        /* ====================================================
-           APPEND CELLS
-           ==================================================== */
-
-        row.appendChild(
-            numberCell
-        );
-
-        row.appendChild(
-            nameCell
-        );
-
-        row.appendChild(
-            qtyCell
-        );
-
-        row.appendChild(
-            priceCell
-        );
-
-        row.appendChild(
-            totalCell
-        );
-
-        row.appendChild(
-            actionCell
-        );
-
-
-        /* ====================================================
-           EVENTS
-           ==================================================== */
 
         bindItemRowEvents(
             row,
-            item,
-            nameInput,
-            qtyInput,
-            priceInput,
-            deleteButton
+            item
         );
 
 
@@ -783,146 +593,293 @@
     }
 
 
-    /* ========================================================
-       11. BIND EVENTS
-       ======================================================== */
+    /* ============================================================
+       10. BIND ITEM EVENTS
+       ============================================================ */
 
     function bindItemRowEvents(
         row,
-        item,
-        nameInput,
-        qtyInput,
-        priceInput,
-        deleteButton
+        item
     ) {
 
+        const inputs =
+            row.querySelectorAll(
+                "input"
+            );
 
-        /* NAME */
 
-        nameInput.addEventListener(
-            "input",
-            function (event) {
+        inputs.forEach(
+            input => {
 
-                updateItem(
-                    item.id,
-                    "name",
-                    event.target.value
+                const field =
+                    input.dataset.field;
+
+
+                input.addEventListener(
+                    "input",
+                    function () {
+
+                        if (
+                            field === "price"
+                        ) {
+
+                            /*
+                             * Ambil posisi cursor
+                             */
+
+                            const oldValue =
+                                input.value;
+
+
+                            const cursorPosition =
+                                input.selectionStart;
+
+
+                            /*
+                             * Hitung berapa angka
+                             * sebelum cursor.
+                             */
+
+                            const digitsBeforeCursor =
+                                oldValue
+                                    .slice(
+                                        0,
+                                        cursorPosition
+                                    )
+                                    .replace(
+                                        /\D/g,
+                                        ""
+                                    )
+                                    .length;
+
+
+                            /*
+                             * Parse nilai.
+                             */
+
+                            const numericValue =
+                                parseItemNumber(
+                                    oldValue
+                                );
+
+
+                            /*
+                             * Format ulang.
+                             */
+
+                            const formattedValue =
+                                formatItemNumber(
+                                    numericValue
+                                );
+
+
+                            input.value =
+                                formattedValue;
+
+
+                            /*
+                             * Pulihkan cursor
+                             * berdasarkan jumlah digit.
+                             */
+
+                            let newCursor =
+                                0;
+
+                            let digitCount =
+                                0;
+
+
+                            for (
+                                let i = 0;
+                                i < formattedValue.length;
+                                i++
+                            ) {
+
+                                if (
+                                    /\d/.test(
+                                        formattedValue[i]
+                                    )
+                                ) {
+
+                                    digitCount++;
+
+                                }
+
+
+                                newCursor =
+                                    i + 1;
+
+
+                                if (
+                                    digitCount >=
+                                    digitsBeforeCursor
+                                ) {
+
+                                    break;
+
+                                }
+
+                            }
+
+
+                            if (
+                                digitsBeforeCursor === 0
+                            ) {
+
+                                newCursor = 0;
+
+                            }
+
+
+                            try {
+
+                                input.setSelectionRange(
+                                    newCursor,
+                                    newCursor
+                                );
+
+                            } catch (error) {
+
+                                /*
+                                 * Abaikan jika browser
+                                 * tidak mengizinkan.
+                                 */
+
+                            }
+
+
+                            updateItem(
+                                item.id,
+                                field,
+                                numericValue
+                            );
+
+
+                            return;
+
+                        }
+
+
+                        updateItem(
+                            item.id,
+                            field,
+                            input.value
+                        );
+
+                    }
                 );
+
+
+                /*
+                 * Saat keluar dari input harga,
+                 * pastikan format tetap rapi.
+                 */
+
+                if (
+                    field === "price"
+                ) {
+
+                    input.addEventListener(
+                        "blur",
+                        function () {
+
+                            input.value =
+                                formatItemNumber(
+                                    item.price
+                                );
+
+                        }
+                    );
+
+                }
 
             }
         );
 
 
-        /* QTY */
+        /*
+         * Delete
+         */
 
-        qtyInput.addEventListener(
-            "input",
-            function (event) {
-
-                updateItem(
-                    item.id,
-                    "qty",
-                    event.target.value
-                );
-
-            }
-        );
+        const deleteButton =
+            row.querySelector(
+                '[data-action="delete"]'
+            );
 
 
-        /* PRICE */
+        if (deleteButton) {
 
-        priceInput.addEventListener(
-            "input",
-            function (event) {
+            deleteButton.addEventListener(
+                "click",
+                function () {
 
-                updateItem(
-                    item.id,
-                    "price",
-                    event.target.value
-                );
+                    removeItem(
+                        item.id
+                    );
 
-            }
-        );
+                }
+            );
 
-
-        /* DELETE */
-
-        deleteButton.addEventListener(
-            "click",
-            function (event) {
-
-                event.preventDefault();
-
-                removeItem(
-                    item.id
-                );
-
-            }
-        );
+        }
 
     }
 
 
-    /* ========================================================
-       12. GET ITEMS
-       ======================================================== */
+    /* ============================================================
+       11. GET ITEMS
+       ============================================================ */
 
     function getItems() {
 
         return window.FSI_ITEMS.map(
-            function (item) {
+            item => ({
 
-                const qty =
-                    Number(item.qty) || 0;
+                id:
+                    item.id,
 
+                name:
+                    String(
+                        item.name || ""
+                    ).trim(),
 
-                const price =
-                    Number(item.price) || 0;
+                qty:
+                    Number(
+                        item.qty
+                    ) || 0,
 
+                price:
+                    Number(
+                        item.price
+                    ) || 0,
 
-                return {
+                total:
+                    (
+                        Number(item.qty) || 0
+                    ) *
+                    (
+                        Number(item.price) || 0
+                    )
 
-                    id:
-                        item.id,
-
-                    name:
-                        String(
-                            item.name || ""
-                        ).trim(),
-
-                    qty:
-                        qty,
-
-                    price:
-                        price,
-
-                    total:
-                        qty * price
-
-                };
-
-            }
+            })
         );
 
     }
 
 
-    /* ========================================================
-       13. GET TOTAL
-       ======================================================== */
+    /* ============================================================
+       12. GET TOTAL ITEMS
+       ============================================================ */
 
     function getTotalItems() {
 
         return getItems().reduce(
-            function (
+            (
                 total,
                 item
-            ) {
+            ) => {
 
-                return (
-                    total +
-                    item.total
-                );
+                return total +
+                    item.total;
 
             },
             0
@@ -931,9 +888,9 @@
     }
 
 
-    /* ========================================================
-       14. CLEAR
-       ======================================================== */
+    /* ============================================================
+       13. CLEAR ITEMS
+       ============================================================ */
 
     function clearItems() {
 
@@ -944,31 +901,26 @@
     }
 
 
-    /* ========================================================
-       15. LOAD DEFAULT ITEMS
-       ======================================================== */
+    /* ============================================================
+       14. LOAD DEFAULT ITEMS
+       ============================================================ */
 
     function loadDefaultItems() {
 
-        window.FSI_ITEMS = [];
-
-
-        const config =
-            window.FSI_CALCULATOR_CONFIG ||
-            window.FSI_CONFIG ||
-            {};
+        clearItems();
 
 
         const defaults =
+            window.FSI_CONFIG &&
             Array.isArray(
-                config.defaultItems
+                window.FSI_CONFIG.defaultItems
             )
-                ? config.defaultItems
+                ? window.FSI_CONFIG.defaultItems
                 : [];
 
 
         defaults.forEach(
-            function (item) {
+            item => {
 
                 addItem(
                     item,
@@ -984,9 +936,9 @@
     }
 
 
-    /* ========================================================
-       16. GLOBAL CHANGE EVENT
-       ======================================================== */
+    /* ============================================================
+       15. ITEMS CHANGE EVENT
+       ============================================================ */
 
     function triggerItemsChange() {
 
@@ -1010,9 +962,9 @@
     }
 
 
-    /* ========================================================
-       17. LUCIDE
-       ======================================================== */
+    /* ============================================================
+       16. REFRESH ICONS
+       ============================================================ */
 
     function refreshItemIcons() {
 
@@ -1029,9 +981,9 @@
     }
 
 
-    /* ========================================================
-       18. PUBLIC API
-       ======================================================== */
+    /* ============================================================
+       17. GLOBAL API
+       ============================================================ */
 
     window.FSIItems = {
 
@@ -1062,14 +1014,9 @@
     };
 
 
-    /* ========================================================
-       19. MODULE READY
-       ======================================================== */
-
     console.log(
         "FSI Items module loaded.",
         window.FSIItems
     );
-
 
 })();
