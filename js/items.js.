@@ -1,39 +1,38 @@
-// ============================================================
-// FSI CONSULTANT - PLTS CALCULATOR
-// File: js/items.js
-//
-// FUNGSI:
-// 1. Add Item
-// 2. Remove Item
-// 3. Edit Item Name
-// 4. Edit Qty
-// 5. Edit Harga / Item
-// 6. Hitung Total otomatis
-// 7. Update nomor item
-// 8. Global items state
-// 9. Event fsi:items-changed
-//
-// IMPORTANT:
-// - Input tidak di-render ulang saat user mengetik.
-// - Cursor/focus tetap aman.
-// - Tidak menggunakan CSS.escape().
-// ============================================================
+/* ============================================================
+   FSI CONSULTANT - PLTS CALCULATOR
+   File: js/items.js
+
+   FUNGSI:
+   1. Add Item
+   2. Remove Item
+   3. Edit Item Name
+   4. Edit Qty
+   5. Edit Harga / Item
+   6. Hitung Total otomatis
+   7. Update nomor item
+   8. Global items state
+   9. Event fsi:items-changed
+   ============================================================ */
 
 (function () {
 
     "use strict";
 
-
-    // ========================================================
-    // STATE
-    // ========================================================
-
-    window.FSI_ITEMS = window.FSI_ITEMS || [];
+    console.log("FSI Items: module mulai loading...");
 
 
-    // ========================================================
-    // UTILITY
-    // ========================================================
+    /* ========================================================
+       1. ITEM STATE
+       ======================================================== */
+
+    window.FSI_ITEMS = Array.isArray(window.FSI_ITEMS)
+        ? window.FSI_ITEMS
+        : [];
+
+
+    /* ========================================================
+       2. UTILITY
+       ======================================================== */
 
     function generateItemId() {
 
@@ -43,21 +42,13 @@
             "-" +
             Math.random()
                 .toString(36)
-                .substring(2, 9)
+                .substring(2, 8)
         );
 
     }
 
 
     function parseItemNumber(value) {
-
-        if (
-            value === null ||
-            value === undefined ||
-            value === ""
-        ) {
-            return 0;
-        }
 
         const number = Number(value);
 
@@ -78,44 +69,22 @@
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
             }
-        ).format(
-            Number(value) || 0
-        );
+        ).format(Number(value) || 0);
 
     }
 
 
-    function escapeHtml(value) {
-
-        return String(value ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-
-    }
-
-
-    // ========================================================
-    // CREATE ITEM OBJECT
-    // ========================================================
+    /* ========================================================
+       3. CREATE ITEM
+       ======================================================== */
 
     function createItem(data = {}) {
 
-        const qty =
-            Math.max(
-                1,
-                parseItemNumber(data.qty) || 1
-            );
+        const qtyValue =
+            parseItemNumber(data.qty);
 
-
-        const price =
-            Math.max(
-                0,
-                parseItemNumber(data.price)
-            );
-
+        const priceValue =
+            parseItemNumber(data.price);
 
         const item = {
 
@@ -128,14 +97,26 @@
                     ? String(data.name)
                     : "",
 
-            qty: qty,
+            qty:
+                Math.max(
+                    1,
+                    qtyValue || 1
+                ),
 
-            price: price,
+            price:
+                Math.max(
+                    0,
+                    priceValue
+                ),
 
-            total:
-                qty * price
+            total: 0
 
         };
+
+
+        item.total =
+            item.qty *
+            item.price;
 
 
         return item;
@@ -143,13 +124,13 @@
     }
 
 
-    // ========================================================
-    // ADD ITEM
-    // ========================================================
+    /* ========================================================
+       4. ADD ITEM
+       ======================================================== */
 
     function addItem(
         data = {},
-        render = true
+        shouldRender = true
     ) {
 
         const item =
@@ -160,12 +141,12 @@
 
 
         console.log(
-            "FSI Items: item ditambahkan:",
+            "FSI Items: item ditambahkan",
             item
         );
 
 
-        if (render) {
+        if (shouldRender) {
 
             renderItems();
 
@@ -177,15 +158,11 @@
     }
 
 
-    // ========================================================
-    // REMOVE ITEM
-    // ========================================================
+    /* ========================================================
+       5. REMOVE ITEM
+       ======================================================== */
 
     function removeItem(itemId) {
-
-        const before =
-            window.FSI_ITEMS.length;
-
 
         window.FSI_ITEMS =
             window.FSI_ITEMS.filter(
@@ -197,28 +174,14 @@
             );
 
 
-        const after =
-            window.FSI_ITEMS.length;
-
-
-        console.log(
-            "FSI Items: item dihapus.",
-            {
-                before: before,
-                after: after,
-                id: itemId
-            }
-        );
-
-
         renderItems();
 
     }
 
 
-    // ========================================================
-    // UPDATE ITEM
-    // ========================================================
+    /* ========================================================
+       6. UPDATE ITEM
+       ======================================================== */
 
     function updateItem(
         itemId,
@@ -248,27 +211,22 @@
         }
 
 
-        // ----------------------------------------------------
-        // NAME
-        // ----------------------------------------------------
+        /* NAME */
 
         if (field === "name") {
 
             item.name =
-                String(value ?? "");
+                String(value);
 
         }
 
 
-        // ----------------------------------------------------
-        // QTY
-        // ----------------------------------------------------
+        /* QTY */
 
         else if (field === "qty") {
 
             const qty =
                 parseItemNumber(value);
-
 
             item.qty =
                 Math.max(
@@ -279,15 +237,12 @@
         }
 
 
-        // ----------------------------------------------------
-        // PRICE
-        // ----------------------------------------------------
+        /* PRICE */
 
         else if (field === "price") {
 
             const price =
                 parseItemNumber(value);
-
 
             item.price =
                 Math.max(
@@ -298,43 +253,33 @@
         }
 
 
-        // ----------------------------------------------------
-        // TOTAL
-        // ----------------------------------------------------
+        /* TOTAL */
 
         item.total =
             item.qty *
             item.price;
 
 
-        // ----------------------------------------------------
-        // UPDATE ONLY TOTAL
-        // ----------------------------------------------------
+        /*
+         * Hanya update angka total.
+         * Jangan render ulang seluruh row karena
+         * cursor input bisa hilang.
+         */
 
-        updateItemRowTotal(item);
-
-
-        // ----------------------------------------------------
-        // UPDATE GLOBAL TOTAL
-        // ----------------------------------------------------
+        updateItemRow(item);
 
         updateItemsTotalDisplay();
-
-
-        // ----------------------------------------------------
-        // NOTIFY OTHER MODULES
-        // ----------------------------------------------------
 
         triggerItemsChange();
 
     }
 
 
-    // ========================================================
-    // UPDATE SINGLE ROW TOTAL
-    // ========================================================
+    /* ========================================================
+       7. UPDATE SINGLE ROW
+       ======================================================== */
 
-    function updateItemRowTotal(item) {
+    function updateItemRow(item) {
 
         const rows =
             document.querySelectorAll(
@@ -363,7 +308,9 @@
 
 
         if (!row) {
+
             return;
+
         }
 
 
@@ -385,9 +332,9 @@
     }
 
 
-    // ========================================================
-    // UPDATE TOTAL DISPLAY
-    // ========================================================
+    /* ========================================================
+       8. UPDATE TOTAL DISPLAY
+       ======================================================== */
 
     function updateItemsTotalDisplay() {
 
@@ -404,7 +351,9 @@
         if (totalElement) {
 
             totalElement.textContent =
-                formatItemCurrency(total);
+                formatItemCurrency(
+                    total
+                );
 
         }
 
@@ -418,16 +367,18 @@
         if (summaryElement) {
 
             summaryElement.textContent =
-                formatItemCurrency(total);
+                formatItemCurrency(
+                    total
+                );
 
         }
 
     }
 
 
-    // ========================================================
-    // RENDER ITEMS
-    // ========================================================
+    /* ========================================================
+       9. RENDER ITEMS
+       ======================================================== */
 
     function renderItems() {
 
@@ -451,9 +402,7 @@
         tbody.innerHTML = "";
 
 
-        // ----------------------------------------------------
-        // EMPTY
-        // ----------------------------------------------------
+        /* EMPTY */
 
         if (
             window.FSI_ITEMS.length === 0
@@ -469,12 +418,22 @@
                 "empty-table-row";
 
 
-            emptyRow.innerHTML = `
-                <td colspan="6">
-                    Belum ada item.
-                    Klik "Add Item" untuk menambahkan.
-                </td>
-            `;
+            const emptyCell =
+                document.createElement(
+                    "td"
+                );
+
+
+            emptyCell.colSpan = 6;
+
+
+            emptyCell.textContent =
+                'Belum ada item. Klik "Add Item" untuk menambahkan.';
+
+
+            emptyRow.appendChild(
+                emptyCell
+            );
 
 
             tbody.appendChild(
@@ -486,14 +445,14 @@
 
             triggerItemsChange();
 
+            refreshItemIcons();
+
             return;
 
         }
 
 
-        // ----------------------------------------------------
-        // ITEMS
-        // ----------------------------------------------------
+        /* ITEMS */
 
         window.FSI_ITEMS.forEach(
             function (item, index) {
@@ -510,7 +469,9 @@
                     );
 
 
-                tbody.appendChild(row);
+                tbody.appendChild(
+                    row
+                );
 
             }
         );
@@ -518,18 +479,16 @@
 
         updateItemsTotalDisplay();
 
-
         refreshItemIcons();
-
 
         triggerItemsChange();
 
     }
 
 
-    // ========================================================
-    // CREATE ITEM ROW
-    // ========================================================
+    /* ========================================================
+       10. CREATE ITEM ROW
+       ======================================================== */
 
     function createItemRow(
         item,
@@ -548,15 +507,14 @@
         );
 
 
-        // ----------------------------------------------------
-        // NUMBER
-        // ----------------------------------------------------
+        /* ====================================================
+           NUMBER
+           ==================================================== */
 
         const numberCell =
             document.createElement(
                 "td"
             );
-
 
         numberCell.className =
             "col-no";
@@ -566,7 +524,6 @@
             document.createElement(
                 "span"
             );
-
 
         numberSpan.className =
             "item-number";
@@ -581,15 +538,14 @@
         );
 
 
-        // ----------------------------------------------------
-        // NAME
-        // ----------------------------------------------------
+        /* ====================================================
+           NAME
+           ==================================================== */
 
         const nameCell =
             document.createElement(
                 "td"
             );
-
 
         nameCell.className =
             "col-name";
@@ -600,31 +556,19 @@
                 "input"
             );
 
-
-        nameInput.type =
-            "text";
-
+        nameInput.type = "text";
 
         nameInput.className =
             "item-name";
 
-
         nameInput.value =
             item.name;
-
 
         nameInput.placeholder =
             "Nama item";
 
-
         nameInput.autocomplete =
             "off";
-
-
-        nameInput.setAttribute(
-            "data-field",
-            "name"
-        );
 
 
         nameCell.appendChild(
@@ -632,15 +576,14 @@
         );
 
 
-        // ----------------------------------------------------
-        // QTY
-        // ----------------------------------------------------
+        /* ====================================================
+           QTY
+           ==================================================== */
 
         const qtyCell =
             document.createElement(
                 "td"
             );
-
 
         qtyCell.className =
             "col-qty";
@@ -651,31 +594,17 @@
                 "input"
             );
 
-
-        qtyInput.type =
-            "number";
-
+        qtyInput.type = "number";
 
         qtyInput.className =
             "item-qty";
 
-
         qtyInput.value =
             item.qty;
 
+        qtyInput.min = "1";
 
-        qtyInput.min =
-            "1";
-
-
-        qtyInput.step =
-            "1";
-
-
-        qtyInput.setAttribute(
-            "data-field",
-            "qty"
-        );
+        qtyInput.step = "1";
 
 
         qtyCell.appendChild(
@@ -683,15 +612,14 @@
         );
 
 
-        // ----------------------------------------------------
-        // PRICE
-        // ----------------------------------------------------
+        /* ====================================================
+           PRICE
+           ==================================================== */
 
         const priceCell =
             document.createElement(
                 "td"
             );
-
 
         priceCell.className =
             "col-price";
@@ -702,31 +630,17 @@
                 "input"
             );
 
-
-        priceInput.type =
-            "number";
-
+        priceInput.type = "number";
 
         priceInput.className =
             "item-price";
 
-
         priceInput.value =
             item.price;
 
+        priceInput.min = "0";
 
-        priceInput.min =
-            "0";
-
-
-        priceInput.step =
-            "1000";
-
-
-        priceInput.setAttribute(
-            "data-field",
-            "price"
-        );
+        priceInput.step = "1000";
 
 
         priceCell.appendChild(
@@ -734,15 +648,14 @@
         );
 
 
-        // ----------------------------------------------------
-        // TOTAL
-        // ----------------------------------------------------
+        /* ====================================================
+           TOTAL
+           ==================================================== */
 
         const totalCell =
             document.createElement(
                 "td"
             );
-
 
         totalCell.className =
             "col-total";
@@ -752,7 +665,6 @@
             document.createElement(
                 "span"
             );
-
 
         totalSpan.className =
             "item-total";
@@ -769,15 +681,14 @@
         );
 
 
-        // ----------------------------------------------------
-        // ACTION
-        // ----------------------------------------------------
+        /* ====================================================
+           DELETE
+           ==================================================== */
 
         const actionCell =
             document.createElement(
                 "td"
             );
-
 
         actionCell.className =
             "col-action";
@@ -788,20 +699,14 @@
                 "button"
             );
 
-
         deleteButton.type =
             "button";
-
 
         deleteButton.className =
             "delete-row-btn";
 
-
-        deleteButton.setAttribute(
-            "title",
-            "Hapus Item"
-        );
-
+        deleteButton.title =
+            "Hapus Item";
 
         deleteButton.setAttribute(
             "aria-label",
@@ -809,8 +714,20 @@
         );
 
 
-        deleteButton.innerHTML =
-            '<i data-lucide="trash-2"></i>';
+        const icon =
+            document.createElement(
+                "i"
+            );
+
+        icon.setAttribute(
+            "data-lucide",
+            "trash-2"
+        );
+
+
+        deleteButton.appendChild(
+            icon
+        );
 
 
         actionCell.appendChild(
@@ -818,47 +735,46 @@
         );
 
 
-        // ----------------------------------------------------
-        // APPEND
-        // ----------------------------------------------------
+        /* ====================================================
+           APPEND CELLS
+           ==================================================== */
 
         row.appendChild(
             numberCell
         );
 
-
         row.appendChild(
             nameCell
         );
-
 
         row.appendChild(
             qtyCell
         );
 
-
         row.appendChild(
             priceCell
         );
 
-
         row.appendChild(
             totalCell
         );
-
 
         row.appendChild(
             actionCell
         );
 
 
-        // ----------------------------------------------------
-        // EVENTS
-        // ----------------------------------------------------
+        /* ====================================================
+           EVENTS
+           ==================================================== */
 
         bindItemRowEvents(
             row,
-            item
+            item,
+            nameInput,
+            qtyInput,
+            priceInput,
+            deleteButton
         );
 
 
@@ -867,134 +783,89 @@
     }
 
 
-    // ========================================================
-    // BIND ROW EVENTS
-    // ========================================================
+    /* ========================================================
+       11. BIND EVENTS
+       ======================================================== */
 
     function bindItemRowEvents(
         row,
-        item
+        item,
+        nameInput,
+        qtyInput,
+        priceInput,
+        deleteButton
     ) {
 
-        // ----------------------------------------------------
-        // NAME
-        // ----------------------------------------------------
 
-        const nameInput =
-            row.querySelector(
-                ".item-name"
-            );
+        /* NAME */
 
+        nameInput.addEventListener(
+            "input",
+            function (event) {
 
-        if (nameInput) {
+                updateItem(
+                    item.id,
+                    "name",
+                    event.target.value
+                );
 
-            nameInput.addEventListener(
-                "input",
-                function (event) {
-
-                    updateItem(
-                        item.id,
-                        "name",
-                        event.target.value
-                    );
-
-                }
-            );
-
-        }
+            }
+        );
 
 
-        // ----------------------------------------------------
-        // QTY
-        // ----------------------------------------------------
+        /* QTY */
 
-        const qtyInput =
-            row.querySelector(
-                ".item-qty"
-            );
+        qtyInput.addEventListener(
+            "input",
+            function (event) {
 
+                updateItem(
+                    item.id,
+                    "qty",
+                    event.target.value
+                );
 
-        if (qtyInput) {
-
-            qtyInput.addEventListener(
-                "input",
-                function (event) {
-
-                    updateItem(
-                        item.id,
-                        "qty",
-                        event.target.value
-                    );
-
-                }
-            );
-
-        }
+            }
+        );
 
 
-        // ----------------------------------------------------
-        // PRICE
-        // ----------------------------------------------------
+        /* PRICE */
 
-        const priceInput =
-            row.querySelector(
-                ".item-price"
-            );
+        priceInput.addEventListener(
+            "input",
+            function (event) {
 
+                updateItem(
+                    item.id,
+                    "price",
+                    event.target.value
+                );
 
-        if (priceInput) {
-
-            priceInput.addEventListener(
-                "input",
-                function (event) {
-
-                    updateItem(
-                        item.id,
-                        "price",
-                        event.target.value
-                    );
-
-                }
-            );
-
-        }
+            }
+        );
 
 
-        // ----------------------------------------------------
-        // DELETE
-        // ----------------------------------------------------
+        /* DELETE */
 
-        const deleteButton =
-            row.querySelector(
-                ".delete-row-btn"
-            );
+        deleteButton.addEventListener(
+            "click",
+            function (event) {
 
+                event.preventDefault();
 
-        if (deleteButton) {
+                removeItem(
+                    item.id
+                );
 
-            deleteButton.addEventListener(
-                "click",
-                function (event) {
-
-                    event.preventDefault();
-                    event.stopPropagation();
-
-
-                    removeItem(
-                        item.id
-                    );
-
-                }
-            );
-
-        }
+            }
+        );
 
     }
 
 
-    // ========================================================
-    // GET ITEMS
-    // ========================================================
+    /* ========================================================
+       12. GET ITEMS
+       ======================================================== */
 
     function getItems() {
 
@@ -1002,17 +873,11 @@
             function (item) {
 
                 const qty =
-                    Math.max(
-                        1,
-                        Number(item.qty) || 1
-                    );
+                    Number(item.qty) || 0;
 
 
                 const price =
-                    Math.max(
-                        0,
-                        Number(item.price) || 0
-                    );
+                    Number(item.price) || 0;
 
 
                 return {
@@ -1042,9 +907,9 @@
     }
 
 
-    // ========================================================
-    // GET TOTAL
-    // ========================================================
+    /* ========================================================
+       13. GET TOTAL
+       ======================================================== */
 
     function getTotalItems() {
 
@@ -1066,23 +931,22 @@
     }
 
 
-    // ========================================================
-    // CLEAR
-    // ========================================================
+    /* ========================================================
+       14. CLEAR
+       ======================================================== */
 
     function clearItems() {
 
         window.FSI_ITEMS = [];
-
 
         renderItems();
 
     }
 
 
-    // ========================================================
-    // LOAD DEFAULT ITEMS
-    // ========================================================
+    /* ========================================================
+       15. LOAD DEFAULT ITEMS
+       ======================================================== */
 
     function loadDefaultItems() {
 
@@ -1120,9 +984,9 @@
     }
 
 
-    // ========================================================
-    // CHANGE EVENT
-    // ========================================================
+    /* ========================================================
+       16. GLOBAL CHANGE EVENT
+       ======================================================== */
 
     function triggerItemsChange() {
 
@@ -1146,9 +1010,9 @@
     }
 
 
-    // ========================================================
-    // LUCIDE
-    // ========================================================
+    /* ========================================================
+       17. LUCIDE
+       ======================================================== */
 
     function refreshItemIcons() {
 
@@ -1165,9 +1029,9 @@
     }
 
 
-    // ========================================================
-    // PUBLIC API
-    // ========================================================
+    /* ========================================================
+       18. PUBLIC API
+       ======================================================== */
 
     window.FSIItems = {
 
@@ -1198,9 +1062,9 @@
     };
 
 
-    // ========================================================
-    // DEBUG
-    // ========================================================
+    /* ========================================================
+       19. MODULE READY
+       ======================================================== */
 
     console.log(
         "FSI Items module loaded.",
