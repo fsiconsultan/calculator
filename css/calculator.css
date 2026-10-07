@@ -1,0 +1,2040 @@
+/* ============================================================
+   FSI CONSULTANT - PLTS CALCULATOR
+   File: css/calculator.css
+   ============================================================ */
+
+
+/* ============================================================
+   1. ROOT VARIABLES
+   ============================================================ */
+
+:root {
+
+    --fsi-primary: #0f766e;
+    --fsi-primary-dark: #115e59;
+    --fsi-primary-light: #ccfbf1;
+
+    --fsi-dark: #0f172a;
+    --fsi-dark-soft: #1e293b;
+
+    --fsi-text: #1e293b;
+    --fsi-text-soft: #64748b;
+    --fsi-text-muted: #94a3b8;
+
+    --fsi-bg: #f8fafc;
+    --fsi-card: #ffffff;
+
+    --fsi-border: #e2e8f0;
+    --fsi-border-dark: #cbd5e1;
+
+    --fsi-success: #16a34a;
+    --fsi-danger: #dc2626;
+    --fsi-warning: #d97706;
+
+    --fsi-radius: 16px;
+    --fsi-radius-sm: 10px;
+
+    --fsi-shadow:
+        0 4px 20px rgba(15, 23, 42, 0.06);
+
+    --fsi-shadow-hover:
+        0 10px 30px rgba(15, 23, 42, 0.10);
+
+    --fsi-transition:
+        0.2s ease;
+
+}
+
+
+/* ============================================================
+   2. RESET
+   ============================================================ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+
+    font-family:
+        "Inter",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background: var(--fsi-bg);
+    color: var(--fsi-text);
+
+    line-height: 1.5;
+
+    min-height: 100vh;
+
+}
+
+
+/* ============================================================
+   3. GENERAL ELEMENTS
+   ============================================================ */
+
+button,
+input,
+select,
+textarea {
+
+    font-family: inherit;
+
+}
+
+button {
+    cursor: pointer;
+}
+
+input,
+select,
+textarea {
+
+    outline: none;
+
+}
+
+
+/* ============================================================
+   4. APP
+   ============================================================ */
+
+#app {
+
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+/* ============================================================
+   5. HEADER
+   ============================================================ */
+
+.app-header {
+
+    height: 76px;
+
+    background: #ffffff;
+
+    border-bottom:
+        1px solid var(--fsi-border);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding:
+        0 32px;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+
+}
+
+
+/* Header left */
+
+.header-left {
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+/* Brand */
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+/* Logo */
+
+.brand-logo {
+
+    width: 44px;
+    height: 44px;
+
+    object-fit: contain;
+
+    border-radius: 10px;
+
+}
+
+
+/* Brand text */
+
+.brand-text {
+
+    display: flex;
+
+    flex-direction: column;
+
+    line-height: 1.15;
+
+}
+
+.brand-text strong {
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    color: var(--fsi-dark);
+
+    letter-spacing: 0.02em;
+
+}
+
+.brand-text span {
+
+    margin-top: 4px;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    color: var(--fsi-text-soft);
+
+}
+
+
+/* Header right */
+
+.header-right {
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+/* Header title */
+
+.header-title {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+}
+
+.header-title span {
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    color: var(--fsi-dark);
+
+}
+
+.header-title small {
+
+    margin-top: 2px;
+
+    font-size: 11px;
+
+    color: var(--fsi-text-muted);
+
+}
+
+
+/* ============================================================
+   6. MAIN CONTAINER
+   ============================================================ */
+
+.calculator-container {
+
+    width: 100%;
+
+    max-width: 1400px;
+
+    margin: 0 auto;
+
+    padding:
+        32px;
+
+    flex: 1;
+
+}
+
+
+/* ============================================================
+   7. CARD
+   ============================================================ */
+
+.card {
+
+    background: var(--fsi-card);
+
+    border:
+        1px solid var(--fsi-border);
+
+    border-radius:
+        var(--fsi-radius);
+
+    box-shadow:
+        var(--fsi-shadow);
+
+    margin-bottom: 24px;
+
+    overflow: hidden;
+
+    transition:
+        box-shadow var(--fsi-transition),
+        transform var(--fsi-transition);
+
+}
+
+.card:hover {
+
+    box-shadow:
+        var(--fsi-shadow-hover);
+
+}
+
+
+/* ============================================================
+   8. SECTION HEADER
+   ============================================================ */
+
+.section-header {
+
+    min-height: 78px;
+
+    padding:
+        18px 22px;
+
+    border-bottom:
+        1px solid var(--fsi-border);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+}
+
+
+/* Section title */
+
+.section-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+}
+
+
+/* Section icon */
+
+.section-icon {
+
+    width: 40px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+
+    background:
+        var(--fsi-primary-light);
+
+    color:
+        var(--fsi-primary);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+.section-icon svg {
+
+    width: 20px;
+    height: 20px;
+
+}
+
+
+/* Section text */
+
+.section-title h2 {
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    color:
+        var(--fsi-dark);
+
+}
+
+.section-title p {
+
+    margin-top: 3px;
+
+    font-size: 12px;
+
+    color:
+        var(--fsi-text-muted);
+
+}
+
+
+/* ============================================================
+   9. FORM GRID
+   ============================================================ */
+
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+
+    padding: 24px;
+
+}
+
+
+/* ============================================================
+   10. FORM GROUP
+   ============================================================ */
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+.form-group label,
+.margin-input-wrapper label {
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    color:
+        var(--fsi-text);
+
+}
+
+
+/* ============================================================
+   11. INPUT
+   ============================================================ */
+
+.form-group input,
+.margin-input-wrapper input {
+
+    width: 100%;
+
+    height: 44px;
+
+    padding:
+        0 13px;
+
+    border:
+        1px solid var(--fsi-border-dark);
+
+    border-radius:
+        var(--fsi-radius-sm);
+
+    background:
+        #ffffff;
+
+    color:
+        var(--fsi-text);
+
+    font-size: 13px;
+
+    transition:
+        border-color var(--fsi-transition),
+        box-shadow var(--fsi-transition);
+
+}
+
+.form-group input::placeholder,
+.margin-input-wrapper input::placeholder {
+
+    color:
+        var(--fsi-text-muted);
+
+}
+
+.form-group input:hover,
+.margin-input-wrapper input:hover {
+
+    border-color:
+        #94a3b8;
+
+}
+
+.form-group input:focus,
+.margin-input-wrapper input:focus {
+
+    border-color:
+        var(--fsi-primary);
+
+    box-shadow:
+        0 0 0 3px rgba(15, 118, 110, 0.10);
+
+}
+
+
+/* ============================================================
+   12. INPUT PREFIX / SUFFIX
+   ============================================================ */
+
+.input-prefix,
+.input-suffix {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+.input-prefix span {
+
+    position: absolute;
+
+    left: 13px;
+
+    color:
+        var(--fsi-text-soft);
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    pointer-events: none;
+
+}
+
+.input-prefix input {
+
+    padding-left: 38px;
+
+}
+
+
+/* Suffix */
+
+.input-suffix span {
+
+    position: absolute;
+
+    right: 13px;
+
+    color:
+        var(--fsi-text-soft);
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    pointer-events: none;
+
+}
+
+.input-suffix input {
+
+    padding-right: 62px;
+
+}
+
+
+/* ============================================================
+   13. ELECTRICITY SUMMARY
+   ============================================================ */
+
+.electricity-summary {
+
+    margin:
+        0 24px 24px;
+
+    padding:
+        16px 18px;
+
+    border:
+        1px solid #dbeafe;
+
+    border-radius:
+        var(--fsi-radius-sm);
+
+    background:
+        #f8fbff;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+
+}
+
+.electricity-summary-item {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+}
+
+.electricity-summary-item span {
+
+    font-size: 11px;
+
+    color:
+        var(--fsi-text-soft);
+
+}
+
+.electricity-summary-item strong {
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    color:
+        var(--fsi-dark);
+
+}
+
+
+/* ============================================================
+   14. BUTTONS
+   ============================================================ */
+
+.btn {
+
+    height: 40px;
+
+    border-radius:
+        9px;
+
+    padding:
+        0 14px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    border: 1px solid transparent;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    transition:
+        background var(--fsi-transition),
+        border-color var(--fsi-transition),
+        color var(--fsi-transition),
+        transform var(--fsi-transition),
+        box-shadow var(--fsi-transition);
+
+}
+
+.btn svg {
+
+    width: 16px;
+    height: 16px;
+
+}
+
+.btn:active {
+
+    transform:
+        translateY(1px);
+
+}
+
+
+/* Primary */
+
+.btn-primary {
+
+    background:
+        var(--fsi-primary);
+
+    color:
+        #ffffff;
+
+}
+
+.btn-primary:hover {
+
+    background:
+        var(--fsi-primary-dark);
+
+    box-shadow:
+        0 4px 12px rgba(15, 118, 110, 0.20);
+
+}
+
+
+/* Secondary */
+
+.btn-secondary {
+
+    background:
+        #f1f5f9;
+
+    color:
+        var(--fsi-dark);
+
+    border-color:
+        var(--fsi-border);
+
+}
+
+.btn-secondary:hover {
+
+    background:
+        #e2e8f0;
+
+}
+
+
+/* Dark */
+
+.btn-dark {
+
+    background:
+        var(--fsi-dark);
+
+    color:
+        #ffffff;
+
+}
+
+.btn-dark:hover {
+
+    background:
+        #1e293b;
+
+    box-shadow:
+        0 4px 12px rgba(15, 23, 42, 0.20);
+
+}
+
+
+/* Outline */
+
+.btn-outline {
+
+    background:
+        #ffffff;
+
+    color:
+        var(--fsi-text);
+
+    border-color:
+        var(--fsi-border-dark);
+
+}
+
+.btn-outline:hover {
+
+    background:
+        #f8fafc;
+
+    border-color:
+        #94a3b8;
+
+}
+
+
+/* ============================================================
+   15. TABLE
+   ============================================================ */
+
+.table-wrapper {
+
+    width: 100%;
+
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling: touch;
+
+}
+
+
+.calculator-table {
+
+    width: 100%;
+
+    min-width: 800px;
+
+    border-collapse: collapse;
+
+}
+
+
+/* Table header */
+
+.calculator-table thead th {
+
+    height: 44px;
+
+    padding:
+        0 12px;
+
+    background:
+        #f8fafc;
+
+    border-bottom:
+        1px solid var(--fsi-border);
+
+    color:
+        var(--fsi-text-soft);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-align: left;
+
+    white-space: nowrap;
+
+}
+
+
+/* Table body */
+
+.calculator-table tbody td {
+
+    padding:
+        9px 12px;
+
+    border-bottom:
+        1px solid #f1f5f9;
+
+    vertical-align: middle;
+
+}
+
+
+/* Table row */
+
+.calculator-table tbody tr {
+
+    transition:
+        background var(--fsi-transition);
+
+}
+
+.calculator-table tbody tr:hover {
+
+    background:
+        #fafafa;
+
+}
+
+
+/* Table footer */
+
+.calculator-table tfoot td {
+
+    height: 52px;
+
+    padding:
+        0 12px;
+
+    background:
+        #fafafa;
+
+    border-top:
+        1px solid var(--fsi-border);
+
+}
+
+
+/* ============================================================
+   16. TABLE COLUMN
+   ============================================================ */
+
+.col-no {
+
+    width: 50px;
+
+    text-align: center !important;
+
+}
+
+.col-qty {
+
+    width: 90px;
+
+}
+
+.col-price {
+
+    width: 190px;
+
+}
+
+.col-total {
+
+    width: 190px;
+
+}
+
+.col-action {
+
+    width: 80px;
+
+}
+
+
+/* ============================================================
+   17. TABLE INPUT
+   ============================================================ */
+
+.calculator-table input {
+
+    width: 100%;
+
+    height: 36px;
+
+    padding:
+        0 9px;
+
+    border:
+        1px solid var(--fsi-border);
+
+    border-radius:
+        7px;
+
+    background:
+        #ffffff;
+
+    color:
+        var(--fsi-text);
+
+    font-size: 12px;
+
+    transition:
+        border-color var(--fsi-transition),
+        box-shadow var(--fsi-transition);
+
+}
+
+.calculator-table input:focus {
+
+    border-color:
+        var(--fsi-primary);
+
+    box-shadow:
+        0 0 0 3px rgba(15, 118, 110, 0.08);
+
+}
+
+
+/* Number input */
+
+.calculator-table input[type="number"] {
+
+    text-align: right;
+
+}
+
+
+/* Name input */
+
+.calculator-table input.item-name,
+.calculator-table input.cost-name {
+
+    text-align: left;
+
+}
+
+
+/* ============================================================
+   18. TABLE TOTAL
+   ============================================================ */
+
+.table-total-label {
+
+    text-align: right;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    color:
+        var(--fsi-text);
+
+}
+
+.table-total-value {
+
+    text-align: right;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    color:
+        var(--fsi-dark);
+
+}
+
+
+/* ============================================================
+   19. DELETE BUTTON
+   ============================================================ */
+
+.delete-row-btn {
+
+    width: 34px;
+    height: 34px;
+
+    border:
+        1px solid #fecaca;
+
+    border-radius:
+        8px;
+
+    background:
+        #fff7f7;
+
+    color:
+        var(--fsi-danger);
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    transition:
+        background var(--fsi-transition),
+        border-color var(--fsi-transition),
+        transform var(--fsi-transition);
+
+}
+
+.delete-row-btn:hover {
+
+    background:
+        #fee2e2;
+
+    border-color:
+        #fca5a5;
+
+}
+
+.delete-row-btn svg {
+
+    width: 15px;
+    height: 15px;
+
+}
+
+
+/* ============================================================
+   20. EMPTY ROW
+   ============================================================ */
+
+.empty-table-row td {
+
+    height: 90px;
+
+    text-align: center;
+
+    color:
+        var(--fsi-text-muted);
+
+    font-size: 12px;
+
+}
+
+
+/* ============================================================
+   21. MARGIN CARD
+   ============================================================ */
+
+.margin-input-wrapper {
+
+    max-width: 360px;
+
+    padding:
+        24px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+.margin-input-wrapper small {
+
+    font-size: 11px;
+
+    color:
+        var(--fsi-text-muted);
+
+}
+
+
+/* ============================================================
+   22. SUMMARY
+   ============================================================ */
+
+.summary-card {
+
+    margin-bottom: 24px;
+
+}
+
+
+.summary-grid {
+
+    padding:
+        10px 24px 24px;
+
+}
+
+
+/* Summary row */
+
+.summary-row {
+
+    min-height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    border-bottom:
+        1px solid #f1f5f9;
+
+}
+
+.summary-row span {
+
+    font-size: 13px;
+
+    color:
+        var(--fsi-text-soft);
+
+}
+
+.summary-row strong {
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    color:
+        var(--fsi-dark);
+
+}
+
+
+/* Subtotal */
+
+.subtotal-row {
+
+    margin-top: 4px;
+
+}
+
+.subtotal-row span {
+
+    font-weight: 700;
+
+    color:
+        var(--fsi-text);
+
+}
+
+.subtotal-row strong {
+
+    font-size: 15px;
+
+}
+
+
+/* ============================================================
+   23. GRAND TOTAL
+   ============================================================ */
+
+.summary-grand-total {
+
+    margin-top: 18px;
+
+    padding:
+        20px 22px;
+
+    border-radius:
+        14px;
+
+    background:
+        var(--fsi-dark);
+
+    color:
+        #ffffff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+}
+
+.summary-grand-total > div {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+}
+
+.summary-grand-total span {
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.05em;
+
+}
+
+.summary-grand-total small {
+
+    font-size: 10px;
+
+    color:
+        #94a3b8;
+
+}
+
+.summary-grand-total strong {
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+}
+
+
+/* ============================================================
+   24. CALCULATOR ACTIONS
+   ============================================================ */
+
+.calculator-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-bottom: 36px;
+
+}
+
+
+/* ============================================================
+   25. QUOTATION SECTION
+   ============================================================ */
+
+.quotation-section {
+
+    margin-top: 20px;
+
+    margin-bottom: 40px;
+
+}
+
+
+/* Toolbar */
+
+.quotation-toolbar {
+
+    margin-bottom: 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+}
+
+.quotation-toolbar h2 {
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+    color:
+        var(--fsi-dark);
+
+}
+
+.quotation-toolbar p {
+
+    margin-top: 3px;
+
+    font-size: 12px;
+
+    color:
+        var(--fsi-text-muted);
+
+}
+
+
+/* Quotation actions */
+
+.quotation-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+
+/* ============================================================
+   26. QUOTATION DOCUMENT CONTAINER
+   ============================================================ */
+
+.quotation-document {
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid var(--fsi-border);
+
+    border-radius:
+        var(--fsi-radius);
+
+    box-shadow:
+        var(--fsi-shadow);
+
+    min-height:
+        500px;
+
+    overflow:
+        hidden;
+
+}
+
+
+/* Empty quotation */
+
+.quotation-empty {
+
+    min-height: 500px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding:
+        40px;
+
+    color:
+        var(--fsi-text-muted);
+
+}
+
+.quotation-empty svg {
+
+    width: 44px;
+    height: 44px;
+
+    margin-bottom: 14px;
+
+    color:
+        #cbd5e1;
+
+}
+
+.quotation-empty h3 {
+
+    margin-bottom: 6px;
+
+    font-size: 16px;
+
+    color:
+        var(--fsi-text);
+
+}
+
+.quotation-empty p {
+
+    font-size: 12px;
+
+}
+
+
+/* ============================================================
+   27. FOOTER
+   ============================================================ */
+
+.app-footer {
+
+    min-height: 64px;
+
+    padding:
+        16px 32px;
+
+    border-top:
+        1px solid var(--fsi-border);
+
+    background:
+        #ffffff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    color:
+        var(--fsi-text-muted);
+
+    font-size: 10px;
+
+}
+
+.app-footer > div:first-child {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+
+}
+
+.app-footer strong {
+
+    font-size: 11px;
+
+    color:
+        var(--fsi-text);
+
+}
+
+.app-footer span {
+
+    font-size: 10px;
+
+}
+
+
+/* ============================================================
+   28. FOCUS ACCESSIBILITY
+   ============================================================ */
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+
+    outline:
+        2px solid var(--fsi-primary);
+
+    outline-offset:
+        2px;
+
+}
+
+
+/* ============================================================
+   29. DISABLED
+   ============================================================ */
+
+button:disabled {
+
+    cursor:
+        not-allowed;
+
+    opacity:
+        0.55;
+
+}
+
+input:disabled {
+
+    background:
+        #f8fafc;
+
+    color:
+        var(--fsi-text-muted);
+
+    cursor:
+        not-allowed;
+
+}
+
+
+/* ============================================================
+   30. ANIMATION
+   ============================================================ */
+
+@keyframes fadeIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(5px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+.card {
+
+    animation:
+        fadeIn 0.35s ease both;
+
+}
+
+
+/* ============================================================
+   31. TABLE ROW ANIMATION
+   ============================================================ */
+
+.calculator-table tbody tr {
+
+    animation:
+        fadeIn 0.2s ease both;
+
+}
+
+
+/* ============================================================
+   32. RESPONSIVE - TABLET
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .app-header {
+
+        padding:
+            0 20px;
+
+    }
+
+    .calculator-container {
+
+        padding:
+            24px 20px;
+
+    }
+
+    .form-grid {
+
+        gap: 16px;
+
+    }
+
+}
+
+
+/* ============================================================
+   33. RESPONSIVE - MOBILE
+   ============================================================ */
+
+@media (max-width: 640px) {
+
+    /* Header */
+
+    .app-header {
+
+        height: auto;
+
+        min-height: 68px;
+
+        padding:
+            12px 16px;
+
+        gap: 12px;
+
+    }
+
+
+    .brand-logo {
+
+        width: 38px;
+        height: 38px;
+
+    }
+
+
+    .brand-text strong {
+
+        font-size: 13px;
+
+    }
+
+
+    .brand-text span {
+
+        font-size: 9px;
+
+    }
+
+
+    .header-title {
+
+        display: none;
+
+    }
+
+
+    /* Container */
+
+    .calculator-container {
+
+        padding:
+            16px 12px;
+
+    }
+
+
+    /* Card */
+
+    .card {
+
+        border-radius:
+            13px;
+
+        margin-bottom:
+            16px;
+
+    }
+
+
+    /* Section header */
+
+    .section-header {
+
+        padding:
+            15px;
+
+        min-height:
+            68px;
+
+    }
+
+
+    .section-title {
+
+        gap:
+            10px;
+
+    }
+
+
+    .section-icon {
+
+        width: 36px;
+        height: 36px;
+
+        border-radius:
+            9px;
+
+    }
+
+
+    .section-title h2 {
+
+        font-size:
+            14px;
+
+    }
+
+
+    .section-title p {
+
+        font-size:
+            10px;
+
+    }
+
+
+    /* Buttons */
+
+    .section-header .btn {
+
+        width:
+            38px;
+
+        height:
+            38px;
+
+        padding:
+            0;
+
+    }
+
+
+    .section-header .btn span {
+
+        display:
+            none;
+
+    }
+
+
+    /* Form */
+
+    .form-grid {
+
+        grid-template-columns:
+            1fr;
+
+        padding:
+            16px;
+
+        gap:
+            14px;
+
+    }
+
+
+    /* Electricity summary */
+
+    .electricity-summary {
+
+        grid-template-columns:
+            1fr;
+
+        margin:
+            0 16px 16px;
+
+        gap:
+            12px;
+
+    }
+
+
+    /* Margin */
+
+    .margin-input-wrapper {
+
+        padding:
+            16px;
+
+        max-width:
+            none;
+
+    }
+
+
+    /* Summary */
+
+    .summary-grid {
+
+        padding:
+            8px 16px 16px;
+
+    }
+
+
+    .summary-grand-total {
+
+        padding:
+            16px;
+
+    }
+
+
+    .summary-grand-total strong {
+
+        font-size:
+            17px;
+
+    }
+
+
+    /* Actions */
+
+    .calculator-actions {
+
+        flex-direction:
+            column-reverse;
+
+        align-items:
+            stretch;
+
+        margin-bottom:
+            24px;
+
+    }
+
+
+    .calculator-actions .btn {
+
+        width:
+            100%;
+
+    }
+
+
+    /* Quotation toolbar */
+
+    .quotation-toolbar {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+    }
+
+
+    .quotation-actions {
+
+        width:
+            100%;
+
+    }
+
+
+    .quotation-actions .btn {
+
+        flex:
+            1;
+
+    }
+
+
+    /* Footer */
+
+    .app-footer {
+
+        padding:
+            14px 16px;
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+    }
+
+}
+
+
+/* ============================================================
+   34. VERY SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 400px) {
+
+    .calculator-container {
+
+        padding:
+            12px 8px;
+
+    }
+
+
+    .section-header {
+
+        padding:
+            12px;
+
+    }
+
+
+    .section-title h2 {
+
+        font-size:
+            13px;
+
+    }
+
+
+    .section-title p {
+
+        display:
+            none;
+
+    }
+
+
+    .calculator-table {
+
+        min-width:
+            760px;
+
+    }
+
+
+    .summary-grand-total {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+    }
+
+
+    .summary-grand-total strong {
+
+        font-size:
+            20px;
+
+    }
+
+}
+
+
+/* ============================================================
+   35. PRINT - CALCULATOR HIDDEN
+   Quotation.css akan menangani dokumen quotation.
+   ============================================================ */
+
+@media print {
+
+    body {
+
+        background:
+            #ffffff;
+
+    }
+
+    .app-header,
+    .calculator-container > .card,
+    .calculator-actions,
+    .quotation-toolbar,
+    .app-footer {
+
+        display:
+            none !important;
+
+    }
+
+    .quotation-section {
+
+        display:
+            block !important;
+
+        margin:
+            0 !important;
+
+    }
+
+    .quotation-document {
+
+        border:
+            none !important;
+
+        box-shadow:
+            none !important;
+
+        border-radius:
+            0 !important;
+
+    }
+
+}
