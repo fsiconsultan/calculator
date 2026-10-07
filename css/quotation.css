@@ -1,0 +1,1236 @@
+/* ============================================================
+   FSI CONSULTANT - CUSTOMER QUOTATION
+   File: css/quotation.css
+   ============================================================ */
+
+
+/* ============================================================
+   1. QUOTATION DOCUMENT
+   ============================================================ */
+
+.quotation-document {
+
+    width: 100%;
+
+    background: #ffffff;
+
+    color: #1e293b;
+
+}
+
+
+/* ============================================================
+   2. QUOTATION PAPER
+   ============================================================ */
+
+.quotation-paper {
+
+    width: 100%;
+
+    max-width: 1000px;
+
+    margin: 0 auto;
+
+    padding: 48px;
+
+    background: #ffffff;
+
+}
+
+
+/* ============================================================
+   3. QUOTATION HEADER
+   ============================================================ */
+
+.quotation-header {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 40px;
+
+    padding-bottom: 28px;
+
+    border-bottom:
+        2px solid #0f766e;
+
+}
+
+
+/* ============================================================
+   4. QUOTATION BRAND
+   ============================================================ */
+
+.quotation-brand {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 16px;
+
+}
+
+
+.quotation-logo {
+
+    width: 74px;
+
+    height: 74px;
+
+    object-fit: contain;
+
+    border-radius: 12px;
+
+}
+
+
+.quotation-brand-text {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.quotation-company-name {
+
+    font-size: 21px;
+
+    line-height: 1.15;
+
+    font-weight: 800;
+
+    letter-spacing: 0.02em;
+
+    color: #0f172a;
+
+}
+
+
+.quotation-company-subtitle {
+
+    margin-top: 6px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.08em;
+
+    color: #0f766e;
+
+}
+
+
+.quotation-company-description {
+
+    margin-top: 8px;
+
+    max-width: 330px;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+
+    color: #64748b;
+
+}
+
+
+/* ============================================================
+   5. QUOTATION TITLE
+   ============================================================ */
+
+.quotation-title-block {
+
+    text-align: right;
+
+}
+
+
+.quotation-title {
+
+    font-size: 29px;
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: 0.04em;
+
+    color: #0f172a;
+
+}
+
+
+.quotation-title-subtitle {
+
+    margin-top: 8px;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    color: #64748b;
+
+}
+
+
+/* ============================================================
+   6. PROJECT INFORMATION
+   ============================================================ */
+
+.quotation-project-info {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 16px;
+
+    margin-top: 28px;
+
+    padding: 18px;
+
+    border:
+        1px solid #e2e8f0;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+
+}
+
+
+.quotation-info-item {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+}
+
+
+.quotation-info-label {
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.06em;
+
+    color: #94a3b8;
+
+}
+
+
+.quotation-info-value {
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #0f172a;
+
+}
+
+
+/* ============================================================
+   7. ELECTRICITY INFORMATION
+   ============================================================ */
+
+.quotation-electricity {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-top: 18px;
+
+}
+
+
+.quotation-electricity-card {
+
+    padding: 16px;
+
+    border:
+        1px solid #dbeafe;
+
+    border-radius: 10px;
+
+    background:
+        #f8fbff;
+
+}
+
+
+.quotation-electricity-card span {
+
+    display: block;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    color: #64748b;
+
+}
+
+
+.quotation-electricity-card strong {
+
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    color: #0f172a;
+
+}
+
+
+/* ============================================================
+   8. SECTION TITLE
+   ============================================================ */
+
+.quotation-section-title {
+
+    margin-top: 32px;
+
+    margin-bottom: 12px;
+
+}
+
+
+.quotation-section-title h3 {
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.04em;
+
+    color: #0f172a;
+
+}
+
+
+.quotation-section-title p {
+
+    margin-top: 3px;
+
+    font-size: 10px;
+
+    color: #94a3b8;
+
+}
+
+
+/* ============================================================
+   9. SYSTEM TABLE
+   ============================================================ */
+
+.quotation-table-wrapper {
+
+    width: 100%;
+
+    overflow: hidden;
+
+    border:
+        1px solid #e2e8f0;
+
+    border-radius: 10px;
+
+}
+
+
+.quotation-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+
+.quotation-table thead th {
+
+    height: 42px;
+
+    padding:
+        0 12px;
+
+    background:
+        #0f172a;
+
+    color:
+        #ffffff;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.04em;
+
+    text-align: left;
+
+}
+
+
+.quotation-table tbody td {
+
+    padding:
+        12px;
+
+    border-bottom:
+        1px solid #f1f5f9;
+
+    font-size: 11px;
+
+    color:
+        #334155;
+
+}
+
+
+.quotation-table tbody tr:last-child td {
+
+    border-bottom:
+        none;
+
+}
+
+
+.quotation-table tbody tr:nth-child(even) {
+
+    background:
+        #fafafa;
+
+}
+
+
+/* Number */
+
+.quotation-table .quotation-col-no {
+
+    width: 50px;
+
+    text-align: center;
+
+}
+
+
+/* Qty */
+
+.quotation-table .quotation-col-qty {
+
+    width: 80px;
+
+    text-align: center;
+
+}
+
+
+/* Item */
+
+.quotation-table .quotation-col-item {
+
+    width: auto;
+
+}
+
+
+/* Unit */
+
+.quotation-table .quotation-col-unit {
+
+    width: 100px;
+
+    text-align: center;
+
+}
+
+
+/* ============================================================
+   10. SYSTEM BADGE
+   ============================================================ */
+
+.quotation-item-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding:
+        4px 7px;
+
+    border-radius:
+        6px;
+
+    background:
+        #ecfdf5;
+
+    color:
+        #047857;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.03em;
+
+}
+
+
+.quotation-item-name {
+
+    font-weight: 700;
+
+    color:
+        #0f172a;
+
+}
+
+
+.quotation-item-description {
+
+    margin-top: 2px;
+
+    font-size: 9px;
+
+    color:
+        #94a3b8;
+
+}
+
+
+/* ============================================================
+   11. TOTAL INVESTMENT
+   ============================================================ */
+
+.quotation-investment {
+
+    margin-top: 24px;
+
+    padding:
+        22px 24px;
+
+    border-radius:
+        12px;
+
+    background:
+        #0f172a;
+
+    color:
+        #ffffff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+}
+
+
+.quotation-investment-label {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.quotation-investment-label span {
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.06em;
+
+}
+
+
+.quotation-investment-label small {
+
+    margin-top: 4px;
+
+    font-size: 9px;
+
+    color:
+        #94a3b8;
+
+}
+
+
+.quotation-investment-value {
+
+    font-size: 25px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+}
+
+
+/* ============================================================
+   12. FREE SERVICES
+   ============================================================ */
+
+.quotation-free-services {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-top: 18px;
+
+}
+
+
+.quotation-free-card {
+
+    padding:
+        16px;
+
+    border:
+        1px solid #bbf7d0;
+
+    border-radius:
+        10px;
+
+    background:
+        #f0fdf4;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.quotation-free-icon {
+
+    width: 34px;
+
+    height: 34px;
+
+    flex-shrink: 0;
+
+    border-radius:
+        9px;
+
+    background:
+        #dcfce7;
+
+    color:
+        #16a34a;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+.quotation-free-icon svg {
+
+    width: 17px;
+
+    height: 17px;
+
+}
+
+
+.quotation-free-card div:last-child {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.quotation-free-card strong {
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color:
+        #166534;
+
+}
+
+
+.quotation-free-card span {
+
+    margin-top: 2px;
+
+    font-size: 9px;
+
+    color:
+        #4d7c0f;
+
+}
+
+
+/* ============================================================
+   13. QUOTATION NOTES
+   ============================================================ */
+
+.quotation-notes {
+
+    margin-top: 30px;
+
+    padding-top: 20px;
+
+    border-top:
+        1px solid #e2e8f0;
+
+}
+
+
+.quotation-notes h3 {
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    color:
+        #0f172a;
+
+}
+
+
+.quotation-notes ul {
+
+    margin-top: 9px;
+
+    padding-left: 16px;
+
+}
+
+
+.quotation-notes li {
+
+    margin-bottom: 4px;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+
+    color:
+        #64748b;
+
+}
+
+
+/* ============================================================
+   14. QUOTATION FOOTER
+   ============================================================ */
+
+.quotation-footer {
+
+    margin-top: 35px;
+
+    padding-top: 18px;
+
+    border-top:
+        1px solid #e2e8f0;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+}
+
+
+.quotation-footer-company {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+}
+
+
+.quotation-footer-company strong {
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    color:
+        #0f172a;
+
+}
+
+
+.quotation-footer-company span {
+
+    font-size: 8px;
+
+    color:
+        #94a3b8;
+
+}
+
+
+.quotation-footer-contact {
+
+    text-align: right;
+
+    font-size: 8px;
+
+    line-height: 1.6;
+
+    color:
+        #64748b;
+
+}
+
+
+/* ============================================================
+   15. QUOTATION SIGNATURE
+   ============================================================ */
+
+.quotation-signature {
+
+    width: 180px;
+
+    margin-top: 35px;
+
+    margin-left: auto;
+
+    text-align: center;
+
+}
+
+
+.quotation-signature-space {
+
+    height: 55px;
+
+}
+
+
+.quotation-signature-line {
+
+    border-top:
+        1px solid #94a3b8;
+
+}
+
+
+.quotation-signature strong {
+
+    display: block;
+
+    margin-top: 6px;
+
+    font-size: 10px;
+
+    color:
+        #0f172a;
+
+}
+
+
+.quotation-signature span {
+
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: 8px;
+
+    color:
+        #64748b;
+
+}
+
+
+/* ============================================================
+   16. HIGHLIGHT
+   ============================================================ */
+
+.quotation-highlight {
+
+    color:
+        #0f766e;
+
+    font-weight:
+        800;
+
+}
+
+
+/* ============================================================
+   17. MOBILE
+   ============================================================ */
+
+@media (max-width: 640px) {
+
+    .quotation-paper {
+
+        padding:
+            24px 18px;
+
+    }
+
+
+    .quotation-header {
+
+        flex-direction:
+            column;
+
+        gap:
+            20px;
+
+    }
+
+
+    .quotation-title-block {
+
+        text-align:
+            left;
+
+    }
+
+
+    .quotation-title {
+
+        font-size:
+            24px;
+
+    }
+
+
+    .quotation-project-info {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .quotation-electricity {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .quotation-free-services {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .quotation-investment {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+    }
+
+
+    .quotation-investment-value {
+
+        font-size:
+            21px;
+
+    }
+
+
+    .quotation-footer {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+    }
+
+
+    .quotation-footer-contact {
+
+        text-align:
+            left;
+
+    }
+
+
+    .quotation-signature {
+
+        margin-left:
+            0;
+
+    }
+
+}
+
+
+/* ============================================================
+   18. PRINT
+   ============================================================ */
+
+@media print {
+
+    @page {
+
+        size:
+            A4;
+
+        margin:
+            12mm;
+
+    }
+
+
+    html,
+    body {
+
+        width:
+            100%;
+
+        min-width:
+            0;
+
+        background:
+            #ffffff !important;
+
+    }
+
+
+    .quotation-section {
+
+        display:
+            block !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+    }
+
+
+    .quotation-document {
+
+        width:
+            100% !important;
+
+        max-width:
+            none !important;
+
+        min-height:
+            0 !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        border:
+            none !important;
+
+        box-shadow:
+            none !important;
+
+        border-radius:
+            0 !important;
+
+    }
+
+
+    .quotation-paper {
+
+        width:
+            100% !important;
+
+        max-width:
+            none !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        box-shadow:
+            none !important;
+
+    }
+
+
+    .quotation-header {
+
+        page-break-inside:
+            avoid;
+
+    }
+
+
+    .quotation-project-info,
+    .quotation-electricity,
+    .quotation-investment,
+    .quotation-free-services,
+    .quotation-notes,
+    .quotation-footer {
+
+        page-break-inside:
+            avoid;
+
+    }
+
+
+    .quotation-table-wrapper {
+
+        overflow:
+            visible !important;
+
+        border:
+            1px solid #e2e8f0;
+
+    }
+
+
+    .quotation-table {
+
+        width:
+            100% !important;
+
+    }
+
+
+    .quotation-table thead {
+
+        display:
+            table-header-group;
+
+    }
+
+
+    .quotation-table tr {
+
+        page-break-inside:
+            avoid;
+
+    }
+
+
+    .quotation-investment {
+
+        -webkit-print-color-adjust:
+            exact;
+
+        print-color-adjust:
+            exact;
+
+    }
+
+
+    .quotation-free-card {
+
+        -webkit-print-color-adjust:
+            exact;
+
+        print-color-adjust:
+            exact;
+
+    }
+
+
+    .quotation-table thead th {
+
+        -webkit-print-color-adjust:
+            exact;
+
+        print-color-adjust:
+            exact;
+
+    }
+
+
+    .quotation-title,
+    .quotation-company-name {
+
+        color:
+            #000000 !important;
+
+    }
+
+}
+
+
+/* ============================================================
+   19. PRINT QUALITY
+   ============================================================ */
+
+@media print {
+
+    * {
+
+        -webkit-print-color-adjust:
+            exact;
+
+        print-color-adjust:
+            exact;
+
+    }
+
+}
