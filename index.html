@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>FSI Consultant - PLTS Calculator</title>
+
+    <!-- =========================================================
+         FONTS
+    ========================================================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- =========================================================
+         ICONS
+    ========================================================== -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- =========================================================
+         CSS
+    ========================================================== -->
+    <link rel="stylesheet" href="css/calculator.css">
+    <link rel="stylesheet" href="css/quotation.css">
+</head>
+
+<body>
+
+    <!-- =========================================================
+         APP
+    ========================================================== -->
+    <div id="app">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+        <header class="app-header">
+
+            <div class="header-left">
+
+                <div class="brand">
+
+                    <img
+                        src="assets/logo-fsi.png"
+                        alt="FSI Consultant"
+                        class="brand-logo"
+                    >
+
+                    <div class="brand-text">
+                        <strong>FSI CONSULTANT</strong>
+                        <span>French Solar Industry</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="header-right">
+
+                <div class="header-title">
+                    <span>PLTS Calculator</span>
+                    <small>Solar Investment Calculator</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             MAIN CONTENT
+        ====================================================== -->
+        <main class="calculator-container">
+
+
+            <!-- =================================================
+                 PROJECT INFORMATION
+            ================================================== -->
+            <section class="card project-card">
+
+                <div class="section-header">
+
+                    <div class="section-title">
+
+                        <div class="section-icon">
+                            <i data-lucide="file-text"></i>
+                        </div>
+
+                        <div>
+                            <h2>Project Information</h2>
+                            <p>Informasi customer dan kebutuhan listrik</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <!-- Project -->
+                    <div class="form-group">
+
+                        <label for="projectName">
+                            Project
+                        </label>
+
+                        <input
+                            type="text"
+                            id="projectName"
+                            name="projectName"
+                            placeholder="Contoh: PLTS Villa Canggu"
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+
+                    <!-- Customer -->
+                    <div class="form-group">
+
+                        <label for="customerName">
+                            Customer
+                        </label>
+
+                        <input
+                            type="text"
+                            id="customerName"
+                            name="customerName"
+                            placeholder="Nama customer"
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+
+                    <!-- PLN Bill -->
+                    <div class="form-group">
+
+                        <label for="electricityBill">
+                            PLN Bill / Bulan
+                        </label>
+
+                        <div class="input-prefix">
+
+                            <span>Rp</span>
+
+                            <input
+                                type="number"
+                                id="electricityBill"
+                                name="electricityBill"
+                                placeholder="0"
+                                min="0"
+                                step="1000"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Tariff -->
+                    <div class="form-group">
+
+                        <label for="electricityTariff">
+                            Tarif PLN
+                        </label>
+
+                        <div class="input-suffix">
+
+                            <input
+                                type="number"
+                                id="electricityTariff"
+                                name="electricityTariff"
+                                value="1800"
+                                min="0"
+                                step="1"
+                            >
+
+                            <span>/ kWh</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Electricity Summary -->
+                <div class="electricity-summary">
+
+                    <div class="electricity-summary-item">
+
+                        <span>
+                            Estimasi Pemakaian
+                        </span>
+
+                        <strong id="estimatedUsage">
+                            0 kWh / bulan
+                        </strong>
+
+                    </div>
+
+                    <div class="electricity-summary-item">
+
+                        <span>
+                            Estimasi Pemakaian Harian
+                        </span>
+
+                        <strong id="estimatedDailyUsage">
+                            0 kWh / hari
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 ITEMS
+            ================================================== -->
+            <section class="card items-card">
+
+                <div class="section-header">
+
+                    <div class="section-title">
+
+                        <div class="section-icon">
+                            <i data-lucide="solar-panel"></i>
+                        </div>
+
+                        <div>
+                            <h2>PLTS Items</h2>
+                            <p>Panel, inverter, battery dan komponen sistem</p>
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="addItemBtn"
+                    >
+
+                        <i data-lucide="plus"></i>
+
+                        <span>
+                            Add Item
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table class="calculator-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th class="col-no">
+                                    #
+                                </th>
+
+                                <th>
+                                    Item Name
+                                </th>
+
+                                <th class="col-qty">
+                                    Qty
+                                </th>
+
+                                <th class="col-price">
+                                    Harga / Item
+                                </th>
+
+                                <th class="col-total">
+                                    Total Harga
+                                </th>
+
+                                <th class="col-action">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="itemsTableBody">
+
+                            <!--
+                                Item rows akan dibuat oleh:
+                                js/items.js
+                            -->
+
+                        </tbody>
+
+
+                        <tfoot>
+
+                            <tr>
+
+                                <td
+                                    colspan="4"
+                                    class="table-total-label"
+                                >
+                                    Total Item
+                                </td>
+
+                                <td
+                                    id="totalItems"
+                                    class="table-total-value"
+                                >
+                                    Rp 0
+                                </td>
+
+                                <td></td>
+
+                            </tr>
+
+                        </tfoot>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 COSTS
+            ================================================== -->
+            <section class="card costs-card">
+
+                <div class="section-header">
+
+                    <div class="section-title">
+
+                        <div class="section-icon">
+                            <i data-lucide="wrench"></i>
+                        </div>
+
+                        <div>
+                            <h2>Biaya Project</h2>
+                            <p>Installation, aluminium, delivery dan biaya lainnya</p>
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="addCostBtn"
+                    >
+
+                        <i data-lucide="plus"></i>
+
+                        <span>
+                            Add Biaya
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table class="calculator-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th class="col-no">
+                                    #
+                                </th>
+
+                                <th>
+                                    Biaya
+                                </th>
+
+                                <th class="col-qty">
+                                    Qty
+                                </th>
+
+                                <th class="col-price">
+                                    Harga / Item
+                                </th>
+
+                                <th class="col-total">
+                                    Total Biaya
+                                </th>
+
+                                <th class="col-action">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="costsTableBody">
+
+                            <!--
+                                Cost rows akan dibuat oleh:
+                                js/costs.js
+                            -->
+
+                        </tbody>
+
+
+                        <tfoot>
+
+                            <tr>
+
+                                <td
+                                    colspan="4"
+                                    class="table-total-label"
+                                >
+                                    Total Biaya
+                                </td>
+
+                                <td
+                                    id="totalCosts"
+                                    class="table-total-value"
+                                >
+                                    Rp 0
+                                </td>
+
+                                <td></td>
+
+                            </tr>
+
+                        </tfoot>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 MARGIN
+            ================================================== -->
+            <section class="card margin-card">
+
+                <div class="section-header">
+
+                    <div class="section-title">
+
+                        <div class="section-icon">
+                            <i data-lucide="percent"></i>
+                        </div>
+
+                        <div>
+                            <h2>Margin / Markup</h2>
+                            <p>
+                                Kosongkan jika tidak ingin menambahkan margin
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="margin-input-wrapper">
+
+                    <label for="marginPercentage">
+                        Margin / Markup
+                    </label>
+
+                    <div class="input-suffix">
+
+                        <input
+                            type="number"
+                            id="marginPercentage"
+                            name="marginPercentage"
+                            placeholder="0"
+                            min="0"
+                            step="0.1"
+                        >
+
+                        <span>%</span>
+
+                    </div>
+
+                    <small>
+                        Kosong = 0%
+                    </small>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 CALCULATION SUMMARY
+            ================================================== -->
+            <section class="card summary-card">
+
+                <div class="section-header">
+
+                    <div class="section-title">
+
+                        <div class="section-icon">
+                            <i data-lucide="calculator"></i>
+                        </div>
+
+                        <div>
+                            <h2>Calculation Summary</h2>
+                            <p>Ringkasan investasi PLTS</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="summary-grid">
+
+                    <!-- Total Item -->
+                    <div class="summary-row">
+
+                        <span>
+                            Total Item
+                        </span>
+
+                        <strong id="summaryTotalItems">
+                            Rp 0
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Total Biaya -->
+                    <div class="summary-row">
+
+                        <span>
+                            Total Biaya
+                        </span>
+
+                        <strong id="summaryTotalCosts">
+                            Rp 0
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Subtotal -->
+                    <div class="summary-row subtotal-row">
+
+                        <span>
+                            Subtotal
+                        </span>
+
+                        <strong id="summarySubtotal">
+                            Rp 0
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Margin -->
+                    <div class="summary-row">
+
+                        <span>
+                            Margin
+                        </span>
+
+                        <strong id="summaryMargin">
+                            Rp 0
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Grand Total -->
+                    <div class="summary-grand-total">
+
+                        <div>
+
+                            <span>
+                                GRAND TOTAL
+                            </span>
+
+                            <small>
+                                Total Investment
+                            </small>
+
+                        </div>
+
+                        <strong id="grandTotal">
+                            Rp 0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 CALCULATOR ACTIONS
+            ================================================== -->
+            <section class="calculator-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-outline"
+                    id="resetCalculatorBtn"
+                >
+
+                    <i data-lucide="rotate-ccw"></i>
+
+                    Reset
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-dark"
+                    id="generateQuotationBtn"
+                >
+
+                    <i data-lucide="file-output"></i>
+
+                    Generate Customer Quotation
+
+                </button>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 CUSTOMER QUOTATION
+            ================================================== -->
+            <section
+                class="quotation-section"
+                id="quotationSection"
+            >
+
+                <div class="quotation-toolbar">
+
+                    <div>
+
+                        <h2>
+                            Customer Quotation
+                        </h2>
+
+                        <p>
+                            Tampilan quotation yang dapat diberikan kepada customer
+                        </p>
+
+                    </div>
+
+
+                    <div class="quotation-actions">
+
+                        <button
+                            type="button"
+                            class="btn btn-outline"
+                            id="editQuotationBtn"
+                        >
+
+                            <i data-lucide="pencil"></i>
+
+                            Edit
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="printQuotationBtn"
+                        >
+
+                            <i data-lucide="printer"></i>
+
+                            Print / Save PDF
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     QUOTATION DOCUMENT
+                ================================================== -->
+                <div
+                    class="quotation-document"
+                    id="quotationDocument"
+                >
+
+                    <!-- Quotation content dibuat oleh quotation.js -->
+
+                    <div class="quotation-empty">
+
+                        <i data-lucide="file-text"></i>
+
+                        <h3>
+                            Customer Quotation
+                        </h3>
+
+                        <p>
+                            Klik
+                            <strong>
+                                Generate Customer Quotation
+                            </strong>
+                            untuk membuat quotation.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+
+        <!-- =====================================================
+             FOOTER
+        ====================================================== -->
+        <footer class="app-footer">
+
+            <div>
+                <strong>FSI CONSULTANT</strong>
+                <span>French Solar Industry</span>
+            </div>
+
+            <div>
+                PLTS Calculator
+            </div>
+
+        </footer>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+         IMPORTANT:
+         Load order jangan diubah.
+    ========================================================== -->
+
+    <!-- Configuration -->
+    <script src="js/config.js"></script>
+
+    <!-- Items -->
+    <script src="js/items.js"></script>
+
+    <!-- Costs -->
+    <script src="js/costs.js"></script>
+
+    <!-- Calculation -->
+    <script src="js/calculation.js"></script>
+
+    <!-- Quotation -->
+    <script src="js/quotation.js"></script>
+
+    <!-- Main -->
+    <script src="js/main.js"></script>
+
+
+    <!-- =========================================================
+         LUCIDE INITIALIZATION
+    ========================================================== -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+        });
+    </script>
+
+</body>
+</html>
