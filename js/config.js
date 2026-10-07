@@ -181,16 +181,42 @@ window.FSI_CALCULATOR_CONFIG = {
 
         {
             name: "Installation",
+
+            /*
+             * Automatically follows
+             * total number of solar panels.
+             */
             qty: 20,
+
             price: 936000,
-            auto: true
+
+            auto: true,
+
+            /*
+             * Used by costs.js to identify
+             * the automatic calculation formula.
+             */
+            formula: "installation"
         },
 
         {
             name: "Aluminium Structure",
+
+            /*
+             * Automatically follows
+             * total number of solar panels.
+             */
             qty: 20,
+
             price: 936000,
-            auto: true
+
+            auto: true,
+
+            /*
+             * Used by costs.js to identify
+             * the automatic calculation formula.
+             */
+            formula: "aluminium"
         }
 
     ],
