@@ -11,7 +11,8 @@
    6. Auto Installation
    7. Auto Aluminium Structure
    8. Sinkronisasi jumlah panel
-   9. Hitung Total Biaya
+   9. Format angka otomatis dengan titik ribuan
+   10. Hitung Total Biaya
    ============================================================ */
 
 
@@ -19,7 +20,11 @@
    1. COST STATE
    ============================================================ */
 
-window.FSI_COSTS = [];
+if (!Array.isArray(window.FSI_COSTS)) {
+
+    window.FSI_COSTS = [];
+
+}
 
 
 /* ============================================================
@@ -41,13 +46,97 @@ function generateCostId() {
 
 
 /* ------------------------------------------------------------
+   Parse number
+------------------------------------------------------------ */
+
+function parseCostNumber(value) {
+
+    if (typeof value === "number") {
+
+        return Number.isFinite(value)
+            ? value
+            : 0;
+
+    }
+
+
+    let text =
+        String(value ?? "")
+            .trim();
+
+
+    if (!text) {
+
+        return 0;
+
+    }
+
+
+    /*
+     * Hapus titik ribuan.
+     *
+     * Contoh:
+     * 936.000 -> 936000
+     */
+
+    text =
+        text.replace(/\./g, "");
+
+
+    /*
+     * Hapus semua karakter
+     * selain angka dan minus.
+     */
+
+    text =
+        text.replace(/[^\d-]/g, "");
+
+
+    const number =
+        Number(text);
+
+
+    return Number.isFinite(number)
+        ? number
+        : 0;
+
+}
+
+
+/* ------------------------------------------------------------
+   Format number
+------------------------------------------------------------ */
+
+function formatCostNumber(value) {
+
+    const number =
+        Math.max(
+            0,
+            Math.round(
+                parseCostNumber(value)
+            )
+        );
+
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            maximumFractionDigits: 0
+        }
+    ).format(number);
+
+}
+
+
+/* ------------------------------------------------------------
    Currency
 ------------------------------------------------------------ */
 
 function formatCostCurrency(value) {
 
     const number =
-        Number(value) || 0;
+        parseCostNumber(value);
+
 
     return new Intl.NumberFormat(
         "id-ID",
@@ -58,26 +147,6 @@ function formatCostCurrency(value) {
             maximumFractionDigits: 0
         }
     ).format(number);
-
-}
-
-
-/* ------------------------------------------------------------
-   Number
------------------------------------------------------------- */
-
-function parseCostNumber(value) {
-
-    const number =
-        Number(value);
-
-    if (!Number.isFinite(number)) {
-
-        return 0;
-
-    }
-
-    return number;
 
 }
 
@@ -99,31 +168,21 @@ function createCost(data = {}) {
             "",
 
         qty:
-            parseCostNumber(data.qty) || 1,
+            Math.max(
+                0,
+                parseCostNumber(data.qty) || 1
+            ),
 
         price:
-            parseCostNumber(data.price),
+            Math.max(
+                0,
+                parseCostNumber(data.price)
+            ),
 
         total: 0,
 
-        /*
-         * Auto calculation flag.
-         *
-         * true:
-         * Installation / Aluminium mengikuti
-         * jumlah panel.
-         *
-         * false:
-         * User dapat memasukkan Qty & Harga
-         * secara manual.
-         */
-
         auto:
             data.auto === true,
-
-        /*
-         * Formula type
-         */
 
         formula:
             data.formula ||
@@ -191,15 +250,6 @@ function removeCost(costId) {
 /* ============================================================
    6. GET PANEL QUANTITY
    ============================================================ */
-
-/**
- * Mengambil jumlah panel dari Items.
- *
- * Kita tidak hard-code item tertentu.
- *
- * Semua item yang namanya mengandung
- * "panel" akan dihitung sebagai panel.
- */
 
 function getPanelQuantity() {
 
@@ -322,18 +372,6 @@ function getAutoCostConfig(
    8. CALCULATE AUTO COST
    ============================================================ */
 
-/**
- * Formula:
- *
- * Qty Panel × coefficient × tariff
- *
- * Contoh:
- *
- * 20 × 520 × 1800
- *
- * = Rp18.720.000
- */
-
 function calculateAutoCost(
     cost
 ) {
@@ -355,30 +393,14 @@ function calculateAutoCost(
         getPanelQuantity();
 
 
-    /*
-     * Qty mengikuti jumlah panel.
-     */
-
     cost.qty =
         panelQty;
 
-
-    /*
-     * Harga / Item:
-     *
-     * coefficient × tariff
-     */
 
     cost.price =
         config.coefficient *
         config.tariff;
 
-
-    /*
-     * Total:
-     *
-     * jumlah panel × harga per panel
-     */
 
     cost.total =
         cost.qty *
@@ -434,8 +456,8 @@ function updateCost(
 
     const cost =
         window.FSI_COSTS.find(
-            cost =>
-                cost.id === costId
+            current =>
+                current.id === costId
         );
 
 
@@ -447,8 +469,8 @@ function updateCost(
 
 
     /*
-     * Jika auto aktif,
-     * Qty dan Harga dikontrol formula.
+     * Auto cost:
+     * Qty dan Harga tidak bisa diedit.
      */
 
     if (
@@ -476,6 +498,7 @@ function updateCost(
 
     }
 
+
     else if (
         field === "price"
     ) {
@@ -488,12 +511,13 @@ function updateCost(
 
     }
 
+
     else if (
         field === "name"
     ) {
 
         cost.name =
-            String(value);
+            String(value ?? "");
 
     }
 
@@ -521,8 +545,8 @@ function toggleCostAuto(
 
     const cost =
         window.FSI_COSTS.find(
-            cost =>
-                cost.id === costId
+            current =>
+                current.id === costId
         );
 
 
@@ -539,14 +563,7 @@ function toggleCostAuto(
 
     if (cost.auto) {
 
-        /*
-         * Hanya formula cost yang bisa
-         * menggunakan auto calculation.
-         */
-
-        if (
-            !cost.formula
-        ) {
+        if (!cost.formula) {
 
             cost.auto = false;
 
@@ -577,10 +594,30 @@ function updateCostRow(
     cost
 ) {
 
-    const row =
-        document.querySelector(
-            `[data-cost-id="${cost.id}"]`
+    const rows =
+        document.querySelectorAll(
+            "[data-cost-id]"
         );
+
+
+    let row = null;
+
+
+    rows.forEach(
+        currentRow => {
+
+            if (
+                currentRow.getAttribute(
+                    "data-cost-id"
+                ) === cost.id
+            ) {
+
+                row = currentRow;
+
+            }
+
+        }
+    );
 
 
     if (!row) {
@@ -631,8 +668,7 @@ function renderCosts() {
 
 
     /*
-     * Update seluruh auto cost
-     * sebelum render.
+     * Update auto cost sebelum render.
      */
 
     window.FSI_COSTS.forEach(
@@ -692,6 +728,8 @@ function renderCosts() {
             emptyRow
         );
 
+
+        refreshCostIcons();
 
         triggerCostsChange();
 
@@ -754,10 +792,6 @@ function createCostRow(
     );
 
 
-    /*
-     * Auto cost?
-     */
-
     const isAutoCost =
         cost.auto === true &&
         (
@@ -768,10 +802,6 @@ function createCostRow(
                 "aluminium"
         );
 
-
-    /*
-     * Formula label
-     */
 
     let autoLabel = "";
 
@@ -843,12 +873,13 @@ function createCostRow(
         <td class="col-price">
 
             <input
-                type="number"
+                type="text"
+                inputmode="numeric"
                 class="cost-price"
-                value="${cost.price}"
-                min="0"
-                step="1000"
+                value="${formatCostNumber(cost.price)}"
+                placeholder="0"
                 data-field="price"
+                autocomplete="off"
                 ${isAutoCost ? "readonly" : ""}
             >
 
@@ -904,10 +935,6 @@ function bindCostRowEvents(
     cost
 ) {
 
-    /*
-     * Input events
-     */
-
     const inputs =
         row.querySelectorAll(
             "input"
@@ -925,6 +952,147 @@ function bindCostRowEvents(
                 "input",
                 function () {
 
+                    /*
+                     * Format Harga / Item
+                     */
+
+                    if (
+                        field === "price"
+                    ) {
+
+                        /*
+                         * Jika readonly,
+                         * jangan proses input.
+                         */
+
+                        if (
+                            input.readOnly
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        const oldValue =
+                            input.value;
+
+
+                        const cursorPosition =
+                            input.selectionStart;
+
+
+                        const digitsBeforeCursor =
+                            oldValue
+                                .slice(
+                                    0,
+                                    cursorPosition
+                                )
+                                .replace(
+                                    /\D/g,
+                                    ""
+                                )
+                                .length;
+
+
+                        const numericValue =
+                            parseCostNumber(
+                                oldValue
+                            );
+
+
+                        const formattedValue =
+                            formatCostNumber(
+                                numericValue
+                            );
+
+
+                        input.value =
+                            formattedValue;
+
+
+                        let newCursor =
+                            0;
+
+                        let digitCount =
+                            0;
+
+
+                        for (
+                            let i = 0;
+                            i < formattedValue.length;
+                            i++
+                        ) {
+
+                            if (
+                                /\d/.test(
+                                    formattedValue[i]
+                                )
+                            ) {
+
+                                digitCount++;
+
+                            }
+
+
+                            newCursor =
+                                i + 1;
+
+
+                            if (
+                                digitCount >=
+                                digitsBeforeCursor
+                            ) {
+
+                                break;
+
+                            }
+
+                        }
+
+
+                        if (
+                            digitsBeforeCursor === 0
+                        ) {
+
+                            newCursor = 0;
+
+                        }
+
+
+                        try {
+
+                            input.setSelectionRange(
+                                newCursor,
+                                newCursor
+                            );
+
+                        } catch (error) {
+
+                            /*
+                             * Abaikan jika browser
+                             * tidak mengizinkan.
+                             */
+
+                        }
+
+
+                        updateCost(
+                            cost.id,
+                            field,
+                            numericValue
+                        );
+
+
+                        return;
+
+                    }
+
+
+                    /*
+                     * Name / Qty
+                     */
+
                     updateCost(
                         cost.id,
                         field,
@@ -934,12 +1102,35 @@ function bindCostRowEvents(
                 }
             );
 
+
+            /*
+             * Rapikan kembali saat blur.
+             */
+
+            if (
+                field === "price"
+            ) {
+
+                input.addEventListener(
+                    "blur",
+                    function () {
+
+                        input.value =
+                            formatCostNumber(
+                                cost.price
+                            );
+
+                    }
+                );
+
+            }
+
         }
     );
 
 
     /*
-     * Delete button
+     * Delete
      */
 
     const deleteButton =
@@ -1168,17 +1359,6 @@ function addAluminiumCost() {
    23. PANEL CHANGE HANDLER
    ============================================================ */
 
-/**
- * Dipanggil ketika jumlah panel berubah.
- *
- * items.js akan mengirim:
- *
- * fsi:items-changed
- *
- * kemudian costs.js memperbarui
- * Installation & Aluminium.
- */
-
 document.addEventListener(
     "fsi:items-changed",
     function () {
@@ -1274,26 +1454,11 @@ function refreshCostIcons() {
 function escapeCostHtml(value) {
 
     return String(value ?? "")
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
 }
 
@@ -1347,3 +1512,9 @@ window.FSICosts = {
         renderCosts
 
 };
+
+
+console.log(
+    "FSI Costs module loaded.",
+    window.FSICosts
+);
